@@ -40,7 +40,7 @@ export default function Header({ menuOpen, onMenuOpenChange }: HeaderProps) {
         }`}
       >
         <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between px-6 md:h-20 md:px-10">
-          <Logo />
+          <Logo variant="lockup" />
 
           <nav className="hidden items-center gap-10 md:flex" aria-label="Navegación principal">
             {NAV_ITEMS.map((item) => (
