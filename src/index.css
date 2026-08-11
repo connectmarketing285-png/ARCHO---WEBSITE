@@ -139,4 +139,14 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
+
+  /* Indicador de foco único para todo el sitio. El anillo por defecto del
+     navegador es casi invisible sobre archo-black, y el original lo quitaba
+     con outline-none en los campos del formulario sin poner nada en su lugar.
+     Se usa el naranja de acento: es el token --ring del sistema y tiene
+     contraste de sobra contra los tres fondos (black, ink, cream). */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
 }

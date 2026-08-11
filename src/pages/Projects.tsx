@@ -36,7 +36,7 @@ export default function Projects() {
 
             return (
               <Reveal key={project.slug} delay={layout.delay} className={layout.className}>
-                <ProjectCard project={project} />
+                <ProjectCard project={project} priority={index === 0} />
               </Reveal>
             )
           })}

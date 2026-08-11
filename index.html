@@ -31,12 +31,28 @@
       content="ARCHO es un estudio contemporáneo de arquitectura y construcción que integra diseño y obra en un mismo proceso. San Luis Potosí · Querétaro · Guanajuato."
     />
 
+    <!-- El logo es el elemento LCP de la home (marca de agua del hero) y además
+         aparece en la cabecera y el pie de todas las rutas. -->
+    <link rel="preload" as="image" href="/archo-logo.png" fetchpriority="high" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- La hoja de Google Fonts bloqueaba el render 844 ms. Con media="print" el
+         navegador la descarga sin bloquear y `onload` la activa al llegar. El
+         texto se pinta antes con la fuente de sistema y cambia al cargar, que es
+         justo lo que ya hacía `display=swap`. -->
     <link
-      rel="stylesheet"
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap"
+      onload="this.rel='stylesheet'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap"
+      />
+    </noscript>
   </head>
   <body>
     <div id="root"></div>

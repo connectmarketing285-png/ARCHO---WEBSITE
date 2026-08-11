@@ -4,8 +4,10 @@ import { CONTACT } from '@/data/contact'
 
 const LABEL_CLASS =
   'col-span-4 text-[11px] uppercase tracking-[0.3em] text-archo-mist md:col-span-3'
+// Sin `outline-none`: el original lo usaba y dejaba los campos sin ningún
+// indicador de foco. El anillo naranja de :focus-visible (index.css) se encarga.
 const CONTROL_CLASS =
-  'col-span-8 bg-transparent text-base text-archo-cream outline-none placeholder:text-archo-mist/40 focus-visible:text-archo-cream md:col-span-9'
+  'col-span-8 bg-transparent text-base text-archo-cream placeholder:text-archo-mist/40 focus-visible:text-archo-cream md:col-span-9'
 
 export default function ContactForm() {
   const { fields, submitLabel } = CONTACT.form
@@ -57,7 +59,10 @@ export default function ContactForm() {
               type={field.type}
               required
               placeholder={field.placeholder}
-              className={CONTROL_CLASS}
+              // El <input> desnudo mide 24px de alto: la fila es alta por su
+              // padding, pero el área que responde al tap es solo el campo.
+              // En desktop vuelve al ritmo compacto del original.
+              className={`${CONTROL_CLASS} min-h-11 md:min-h-0`}
             />
           )}
         </div>

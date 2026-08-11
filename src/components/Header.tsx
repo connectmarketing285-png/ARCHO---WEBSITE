@@ -10,13 +10,18 @@ import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
 
 const MENU_ID = 'mobile-menu'
 
-export default function Header() {
-  const [menuOpen, setMenuOpen] = useState(false)
+type HeaderProps = {
+  /** Controlado desde Layout, que necesita el estado para marcar `inert` el fondo. */
+  menuOpen: boolean
+  onMenuOpenChange: (open: boolean) => void
+}
+
+export default function Header({ menuOpen, onMenuOpenChange }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const prefersReducedMotion = usePrefersReducedMotion()
 
-  const closeMenu = useCallback(() => setMenuOpen(false), [])
+  const closeMenu = useCallback(() => onMenuOpenChange(false), [onMenuOpenChange])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -72,7 +77,7 @@ export default function Header() {
           <button
             ref={triggerRef}
             type="button"
-            onClick={() => setMenuOpen((isOpen) => !isOpen)}
+            onClick={() => onMenuOpenChange(!menuOpen)}
             aria-label={menuOpen ? 'Cerrar menú' : 'Menú'}
             aria-expanded={menuOpen}
             aria-controls={MENU_ID}

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://archo.com.mx/sitemap.xml
