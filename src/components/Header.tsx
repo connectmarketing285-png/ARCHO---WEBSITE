@@ -30,7 +30,7 @@ export default function Header() {
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
           scrolled && !menuOpen
-            ? 'border-b border-white/5 bg-archo-black/90 backdrop-blur-sm'
+            ? 'border-b border-white/5 bg-archo-black/80 backdrop-blur-md'
             : 'border-b border-transparent bg-transparent'
         }`}
       >

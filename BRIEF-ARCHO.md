@@ -113,6 +113,13 @@ Google Fonts: `Inter Tight` 300/400/500/600 + `Inter` 300/400/500, con `display=
 
 ### Layout
 - **`Header`** — fijo, `bg-transparent` con `transition-colors duration-500`. Logo + nav desktop + indicador "Estudio abierto · 26" (punto naranja con `shadow-[0_0_12px_var(--archo-orange)]`) + hamburguesa en móvil. Altura `h-16 md:h-20`.
+
+  **Estado scrolled** — verificado contra el sitio original en vivo (no aparece en el HTML capturado porque todas las capturas están en scroll 0). A partir de 24px de scroll:
+
+  ```
+  fixed inset-x-0 top-0 z-50 transition-colors duration-500
+  bg-archo-black/80 backdrop-blur-md border-b border-white/5
+  ```
 - **`MobileMenu`** — no existe en el original capturado; se diseña desde cero. **Derivar toda la estética del sistema ya definido, sin inventar lenguaje visual nuevo.** Especificación abajo.
 - **`Footer`** — grid de 4 columnas: identidad + estudio + índice + redes. Fondo con `blueprint-grid-fine` al 40% de opacidad.
 
