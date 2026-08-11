@@ -95,6 +95,17 @@
     opacity: 1;
     transform: none;
   }
+
+  /* El brief pide desactivar los reveal con prefers-reduced-motion. Se hace en
+     CSS y no solo en JS para que el contenido sea visible incluso si el
+     IntersectionObserver nunca llega a marcar .is-visible. */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
 }
 
 @layer base {
