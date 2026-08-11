@@ -83,6 +83,30 @@
     background-size: 24px 24px;
   }
 
+  /* Área táctil de 44px para links inline dentro de texto: el pseudo-elemento
+     crece centrado sobre el link y este conserva su caja original, así que el
+     ritmo tipográfico no se mueve.
+
+     No sustituye a min-h-11 en todos los casos: en listas apiladas (índice y
+     redes del footer, contacto del MobileMenu) el paso entre líneas es de
+     ~28px, y ahí lo correcto es que el elemento crezca y separe a sus vecinos.
+     Un pseudo-elemento de 44px sobre un paso de 28px se traslaparía. */
+  .touch-target {
+    position: relative;
+  }
+
+  .touch-target::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    min-width: 44px;
+    min-height: 44px;
+    transform: translate(-50%, -50%);
+  }
+
   .reveal {
     opacity: 0;
     transform: translateY(24px);

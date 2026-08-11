@@ -61,7 +61,7 @@ export default function ContactSection() {
 
           <Link
             to={contact.linkTo}
-            className="inline-flex min-h-11 items-center gap-4 border-b border-archo-black pb-2 text-sm uppercase tracking-[0.24em]"
+            className="touch-target inline-flex items-center gap-4 border-b border-archo-black pb-2 text-sm uppercase tracking-[0.24em]"
           >
             {contact.linkLabel}
           </Link>

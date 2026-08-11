@@ -214,6 +214,33 @@ Implicaciones concretas más allá del menú:
 - **Imágenes responsivas.** El original pide `w=1800` y `w=1200` sin importar el dispositivo. Usar `srcset` con anchos móviles (`w=640`, `w=828`) — Unsplash lo soporta cambiando el parámetro `w`.
 - **El hero `text-[28vw]`** en pantallas angostas: verificar que "ARCHO" no se corte ni desborde en 320px.
 - **Áreas táctiles** mínimo 44×44px en nav, botones y links del footer.
+
+  **Regla de implementación** — hay dos mecanismos y no son intercambiables:
+
+  | Caso | Mecanismo | Por qué |
+  |---|---|---|
+  | Link inline dentro de texto | `.touch-target` (pseudo-elemento) | El link conserva su caja; el ritmo tipográfico no se mueve |
+  | Elemento que ya es bloque con padding propio | `min-h-11` | Ya ocupa su espacio; crecer no altera el layout |
+  | Lista de links apilados | `min-h-11`, **nunca** `.touch-target` | Con paso entre líneas de ~28px, dos pseudo-elementos de 44px se traslapan. Aquí el crecimiento del elemento *es* lo que separa a los vecinos |
+
+  ```css
+  .touch-target {
+    position: relative;
+  }
+  .touch-target::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    min-width: 44px;
+    min-height: 44px;
+    transform: translate(-50%, -50%);
+  }
+  ```
+
+  Al añadir un `.touch-target` hay que **verificar que su área no se traslape** con la de otro elemento interactivo: el pseudo-elemento es invisible y puede robar taps a un vecino sin que se note.
 - **`prefers-reduced-motion`**: desactivar los `reveal` y el video en autoplay.
 - **Lighthouse mobile** como métrica de cierre, no la de desktop.
 

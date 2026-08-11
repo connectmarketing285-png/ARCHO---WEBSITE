@@ -8,14 +8,14 @@ type LogoProps = {
 }
 
 /**
- * `min-h-11` da el área táctil de 44px que pide el brief en móvil; en desktop
- * vuelve a la altura del logo (28px) para no alterar el ritmo del original.
+ * `touch-target` da los 44px de área táctil sin tocar la caja: el logo mide
+ * sus 28px de siempre y el ritmo del footer queda igual que en el original.
  */
 export default function Logo({ invert = false, className = '' }: LogoProps) {
   return (
     <Link
       to="/"
-      className={`inline-flex min-h-11 items-center gap-3 text-archo-cream md:min-h-0 ${className}`.trim()}
+      className={`touch-target inline-flex items-center gap-3 text-archo-cream ${className}`.trim()}
     >
       <img
         src={SITE.logo}

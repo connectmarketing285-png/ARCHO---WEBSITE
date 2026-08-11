@@ -79,7 +79,7 @@ export default function CapabilitiesSection() {
                 </p>
                 <Link
                   to={CAPABILITIES_OUTRO.linkTo}
-                  className="mt-6 inline-flex min-h-11 items-center gap-3 text-[11px] uppercase tracking-[0.24em] text-archo-mist hover:text-archo-cream"
+                  className="touch-target mt-6 inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.24em] text-archo-mist hover:text-archo-cream"
                 >
                   {CAPABILITIES_OUTRO.linkLabel}
                 </Link>

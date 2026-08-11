@@ -32,7 +32,7 @@ export default function AboutSection() {
 
           <Link
             to={about.linkTo}
-            className="group mt-10 inline-flex min-h-11 items-center gap-3 text-sm uppercase tracking-[0.24em] text-archo-cream"
+            className="group touch-target mt-10 inline-flex items-center gap-3 text-sm uppercase tracking-[0.24em] text-archo-cream"
           >
             <span className="relative">
               {about.linkLabel}

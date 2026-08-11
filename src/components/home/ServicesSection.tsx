@@ -25,7 +25,7 @@ export default function ServicesSection() {
           </div>
           <Link
             to={services.linkTo}
-            className="hidden text-sm uppercase tracking-[0.24em] text-archo-mist hover:text-archo-cream md:inline"
+            className="touch-target hidden text-sm uppercase tracking-[0.24em] text-archo-mist hover:text-archo-cream md:inline"
           >
             {services.linkLabel}
           </Link>
@@ -65,7 +65,7 @@ export default function ServicesSection() {
         <div className="mt-16 md:hidden">
           <Link
             to={services.linkTo}
-            className="inline-flex min-h-11 items-center text-sm uppercase tracking-[0.24em] text-archo-mist"
+            className="touch-target inline-flex items-center text-sm uppercase tracking-[0.24em] text-archo-mist"
           >
             {services.linkLabel}
           </Link>
