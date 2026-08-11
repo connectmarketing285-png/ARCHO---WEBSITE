@@ -42,6 +42,11 @@
 :root {
   --font-display: "Inter Tight", "Inter", system-ui, sans-serif;
 
+  /* Exclusiva del wordmark "ARCHO" del hero de la home, a petición del cliente.
+     Deliberadamente separada de --font-display: el resto de títulos del sitio
+     —incluidos los "ARCHO" pequeños de cabecera y pie— siguen en Inter Tight. */
+  --font-wordmark: "Poppins", "Inter Tight", system-ui, sans-serif;
+
   /* Alias sin namespace — mismo valor, para usar en arbitrary values. */
   --archo-black: var(--color-archo-black);
   --archo-ink: var(--color-archo-ink);
@@ -67,6 +72,12 @@
   .font-display {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
+  }
+
+  /* Se aplica al <span> del wordmark, no al <h1>: así no compite con
+     .font-display, que sigue gobernando la caja del título. */
+  .wordmark {
+    font-family: var(--font-wordmark);
   }
 
   .blueprint-grid {

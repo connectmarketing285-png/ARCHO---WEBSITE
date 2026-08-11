@@ -33,7 +33,16 @@ export default function Hero() {
         </span>
 
         <h1 className="font-display select-none leading-[0.82] tracking-[-0.04em] text-archo-cream">
-          <span className="block text-[28vw] md:text-[22vw] xl:text-[20rem]">
+          {/* 27vw en lugar del 28vw original: Poppins pinta ~6,8% más ancha que
+              Inter Tight y a 28vw solo dejaba 3,5px de aire por lado a 320px.
+              De md en adelante sobra sitio y los tamaños no se tocan.
+
+              El tracking va AQUÍ y no en el <h1>: `em` en letter-spacing se
+              resuelve contra el font-size del elemento donde se declara. En el
+              h1 (16px) el tracking-[-0.04em] del original vale -0,64px, no los
+              -3,9px que aparenta a la escala del wordmark. Declarado en el span
+              (97,5px a 375) el valor sí es el que se lee. */}
+          <span className="wordmark block text-[27vw] tracking-[-0.02em] md:text-[22vw] xl:text-[20rem]">
             {HOME.hero.title}
           </span>
         </h1>
