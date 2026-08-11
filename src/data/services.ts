@@ -11,6 +11,31 @@ export type Service = {
   items: readonly string[]
 }
 
+/** Copy de la página /services. Las 7 disciplinas se reusan de `SERVICES`. */
+export const SERVICES_PAGE = {
+  eyebrow: 'Práctica · Servicios',
+  eyebrowAccent: 'Siete disciplinas',
+  title: { lead: 'Un estudio,', accent: 'un espectro completo de obra.' },
+  lede: 'Desde el primer croquis de viabilidad hasta el último colado de concreto, cada proyecto lo conduce el mismo equipo: diseño, ingeniería y construcción en diálogo continuo.',
+  index: {
+    label: 'Índice · 01 / 07',
+    hint: 'Pasa el cursor sobre cada disciplina',
+  },
+  /** Tarjeta de cierre del grid, visible solo en lg (completa la retícula de 3). */
+  outro: {
+    symbol: '∞',
+    heading: '¿Tu proyecto exige una disciplina fuera de este índice?',
+    text: 'Conversemos — la mayoría de los encargos comienza con una pregunta así.',
+  },
+  /** Marca al pie de cada tarjeta, visible en hover. */
+  cardTag: '— Disciplina',
+  closing: {
+    eyebrow: 'Compromiso',
+    heading:
+      'Aceptamos un número reducido de encargos al año, para conducir cada uno de manera personal.',
+  },
+} as const
+
 export const SERVICES: readonly Service[] = [
   {
     number: '01',
