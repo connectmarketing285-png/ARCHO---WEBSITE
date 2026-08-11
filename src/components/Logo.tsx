@@ -20,9 +20,9 @@ export default function Logo({ invert = false, className = '' }: LogoProps) {
       <img
         src={SITE.logo}
         alt={SITE.name}
-        width={28}
-        height={28}
-        className="h-7 w-7 select-none object-contain"
+        width={901}
+        height={1100}
+        className="h-7 w-auto select-none object-contain"
         style={{ filter: invert ? 'invert(1)' : 'none' }}
         draggable={false}
       />

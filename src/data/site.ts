@@ -1,6 +1,13 @@
 export const SITE = {
   name: 'ARCHO',
-  logo: '/archo-logo.png',
+  /**
+   * Isotipo blanco entregado por el cliente. Sustituye al lockup horizontal
+   * anterior (marca + "ARCHO CONSTRUCTORA"), así que el ratio pasa de 3.5 a
+   * 0.82: donde se use con caja fija, ahora manda el alto y no el ancho.
+   * El original a 4x vive en /brand; el que se sirve va recortado (el archivo
+   * del cliente trae un 91% de lienzo transparente y descentrado).
+   */
+  logo: '/archo-isotipo.png',
 
   address: {
     street: 'Manuel J. Cloutier 1129',

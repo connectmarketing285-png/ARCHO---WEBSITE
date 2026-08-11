@@ -15,7 +15,9 @@ export default function ContactSection() {
         alt=""
         aria-hidden="true"
         draggable={false}
-        className="pointer-events-none absolute -bottom-20 -right-20 w-[520px] max-w-[60vw] select-none opacity-[0.05]"
+        // Mismo criterio que el hero: el isotipo es vertical, así que el ancho
+        // baja para que la mancha ocupe lo que ocupaba el lockup horizontal.
+        className="pointer-events-none absolute -bottom-20 -right-20 w-[212px] max-w-[25vw] select-none opacity-[0.05]"
         style={{ filter: 'invert(1)' }}
       />
 
@@ -25,9 +27,9 @@ export default function ContactSection() {
             <img
               src={SITE.logo}
               alt={SITE.name}
-              width={36}
-              height={36}
-              className="h-9 w-9 select-none object-contain"
+              width={901}
+              height={1100}
+              className="h-9 w-auto select-none object-contain"
               style={{ filter: 'invert(1)' }}
               draggable={false}
             />

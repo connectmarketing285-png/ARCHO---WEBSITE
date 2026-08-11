@@ -7,12 +7,15 @@ export default function Hero() {
     <section className="relative flex min-h-[90svh] items-center justify-center overflow-hidden bg-archo-black px-6 pt-32 md:pt-40">
       <div className="blueprint-grid pointer-events-none absolute inset-0 opacity-30" />
 
+      {/* El lockup anterior era horizontal y a 78vw de ancho pintaba una banda
+          de ~66vw x 19vw. El isotipo es vertical, así que a ese mismo ancho
+          llenaría la pantalla: 32vw le da una superficie equivalente. */}
       <img
         src={SITE.logo}
         alt=""
         aria-hidden="true"
         draggable={false}
-        className="pointer-events-none absolute left-1/2 top-1/2 w-[78vw] max-w-[820px] -translate-x-1/2 -translate-y-1/2 select-none opacity-[0.04]"
+        className="pointer-events-none absolute left-1/2 top-1/2 w-[32vw] max-w-[335px] -translate-x-1/2 -translate-y-1/2 select-none opacity-[0.04]"
       />
 
       <p className="pointer-events-none absolute left-6 top-28 text-[11px] uppercase tracking-[0.3em] text-archo-mist md:left-10 md:top-32">
@@ -22,12 +25,14 @@ export default function Hero() {
 
       <Reveal className="relative w-full text-center">
         <span className="mx-auto mb-10 inline-flex items-center gap-3 opacity-90">
+          {/* width/height con el ratio real del isotipo, no un cuadrado: así el
+              navegador reserva la caja correcta y no hay salto al cargar. */}
           <img
             src={SITE.logo}
             alt={SITE.name}
-            width={80}
-            height={80}
-            className="h-16 w-16 select-none object-contain md:h-20 md:w-20"
+            width={901}
+            height={1100}
+            className="h-10 w-auto select-none object-contain md:h-12"
             draggable={false}
           />
         </span>
