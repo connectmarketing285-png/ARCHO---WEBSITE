@@ -10,11 +10,10 @@ export const SITE = {
   logo: '/archo-isotipo.png',
 
   /**
-   * Lockup completo (isotipo + "ARCHO" + "CONSTRUCTORA"). Solo se usa en el
-   * nav: ahí sustituye al isotipo + el texto "ARCHO" suelto, porque el propio
-   * lockup ya trae el nombre y repetirlo lo duplicaba.
-   * También recortado: el archivo del cliente es el mismo 1080x1080 con un 92%
-   * de lienzo vacío.
+   * Logotipo del nav: isotipo + "ARCHO / CONSTRUCTORA / S.A de C.V". Solo se
+   * usa ahí, y sin texto al lado porque ya trae el nombre.
+   * Recortado y reescalado desde el archivo del cliente (8268x11811 con un 96%
+   * de lienzo vacío, 2,2 MB); el original está en /brand/6.png.
    */
   lockup: '/archo-lockup.png',
 

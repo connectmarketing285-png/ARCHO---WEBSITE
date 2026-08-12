@@ -28,12 +28,14 @@ export default function Logo({ variant = 'isotipo', invert = false, className = 
         aria-label={SITE.name}
         className={`touch-target inline-flex items-center ${className}`.trim()}
       >
+        {/* 40/48px: el lockup apila ARCHO, CONSTRUCTORA y S.A de C.V junto al
+            isotipo, así que a 36px la línea del nombre se quedaba corta. */}
         <img
           src={SITE.lockup}
           alt={SITE.name}
-          width={910}
-          height={260}
-          className="h-9 w-auto select-none object-contain md:h-10"
+          width={555}
+          height={200}
+          className="h-10 w-auto select-none object-contain md:h-12"
           style={{ filter }}
           draggable={false}
         />
