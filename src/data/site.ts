@@ -17,20 +17,34 @@ export const SITE = {
    */
   lockup: '/archo-lockup.png',
 
+  /**
+   * La dirección se guarda ya partida en líneas porque se pinta igual en el
+   * pie, el menú móvil y /contact. Antes eran dos campos sueltos; con calle,
+   * colonia, código postal y piso son tres renglones.
+   */
   address: {
-    street: 'Manuel J. Cloutier 1129',
-    city: 'San Luis Potosí, S.L.P.',
+    lines: ['Av Santos Degollado 1137, Tangamanga', '78269 San Luis Potosí, S.L.P.', 'Cuarto piso'],
+    /** Una sola línea, para metadatos y para el pie del mapa. */
+    oneLine: 'Av Santos Degollado 1137, Tangamanga, 78269 San Luis Potosí, S.L.P. — Cuarto piso',
   },
+
   phone: {
-    display: '+52 444 767 5474',
-    href: 'tel:+524447675474',
+    display: '+52 440 122 2002',
+    href: 'tel:+524401222002',
   },
+
+  /** El +52 es obligatorio en wa.me: sin país el enlace no resuelve. */
+  whatsapp: {
+    href: 'https://wa.me/524401222002',
+    label: 'WhatsApp',
+    /** Para el aria-label del botón, que en móvil va sin texto visible. */
+    a11yLabel: 'Escríbenos por WhatsApp',
+  },
+
   email: 'admin@archo.com.mx',
   hours: 'Lun — Vie · 09:00 — 19:00 CST',
-  coverage: 'San Luis Potosí · Querétaro · Guanajuato',
-
-  /** Indicador del header. Literal del original. */
-  statusLabel: 'Estudio abierto · 26',
+  coverage:
+    'San Luis Potosí · Querétaro · Guanajuato · Monterrey · Guadalajara · Baja California',
 
   footerTagline: {
     lead: 'Arquitectura, estructura, visión.',

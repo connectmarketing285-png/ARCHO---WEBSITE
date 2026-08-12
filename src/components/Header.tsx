@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom'
 import Logo from '@/components/Logo'
 import MenuIcon from '@/components/MenuIcon'
 import MobileMenu from '@/components/MobileMenu'
+import WhatsAppIcon from '@/components/WhatsAppIcon'
 import { NAV_ITEMS } from '@/data/nav'
 import { SITE } from '@/data/site'
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
@@ -67,12 +68,20 @@ export default function Header({ menuOpen, onMenuOpenChange }: HeaderProps) {
             ))}
           </nav>
 
-          <div className="hidden items-center gap-3 md:flex">
-            <span className="h-1.5 w-1.5 rounded-full bg-archo-orange shadow-[0_0_12px_var(--archo-orange)]" />
-            <span className="text-[11px] uppercase tracking-[0.24em] text-archo-mist">
-              {SITE.statusLabel}
-            </span>
-          </div>
+          {/* Sustituye al indicador "Estudio abierto · 26". Se pinta con la
+              paleta del sitio y no con el verde de marca de WhatsApp, que
+              rompería el monocromo. En móvil va sin texto, junto a la
+              hamburguesa: es donde más se usa. */}
+          <a
+            href={SITE.whatsapp.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={SITE.whatsapp.a11yLabel}
+            className="ml-auto inline-flex min-h-11 min-w-11 items-center justify-center gap-2.5 border border-white/15 px-3.5 text-[11px] uppercase tracking-[0.24em] text-archo-mist transition-colors hover:border-archo-orange hover:text-archo-cream md:ml-0 md:px-4"
+          >
+            <WhatsAppIcon className="h-4 w-4 shrink-0 text-archo-orange" />
+            <span className="hidden md:inline">{SITE.whatsapp.label}</span>
+          </a>
 
           <button
             ref={triggerRef}
@@ -81,7 +90,7 @@ export default function Header({ menuOpen, onMenuOpenChange }: HeaderProps) {
             aria-label={menuOpen ? 'Cerrar menú' : 'Menú'}
             aria-expanded={menuOpen}
             aria-controls={MENU_ID}
-            className="-mr-3 inline-flex h-11 w-11 items-center justify-center text-archo-cream md:hidden"
+            className="-mr-3 ml-1 inline-flex h-11 w-11 items-center justify-center text-archo-cream md:hidden"
           >
             <MenuIcon open={menuOpen} reducedMotion={prefersReducedMotion} />
           </button>

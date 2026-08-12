@@ -20,13 +20,14 @@ export type FormField = {
 const DETAILS: readonly { label: string; lines: readonly ContactLine[] }[] = [
   {
     label: 'Estudio',
-    lines: [{ text: SITE.address.street }, { text: SITE.address.city }],
+    lines: SITE.address.lines.map((text) => ({ text })),
   },
   {
     label: 'Directo',
     lines: [
       { text: SITE.email, href: `mailto:${SITE.email}` },
       { text: SITE.phone.display, href: SITE.phone.href },
+      { text: SITE.whatsapp.label, href: SITE.whatsapp.href },
     ],
   },
   {

@@ -28,8 +28,9 @@ export default function Footer() {
           <div className="md:col-span-3">
             <p className="text-[11px] uppercase tracking-[0.24em] text-archo-mist/70">Estudio</p>
             <ul className="mt-6 space-y-2 text-sm text-archo-cream">
-              <li>{SITE.address.street}</li>
-              <li>{SITE.address.city}</li>
+              {SITE.address.lines.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
               <li className="pt-3 text-archo-mist">
                 <a href={SITE.phone.href} className={LINK_CLASS}>
                   {SITE.phone.display}

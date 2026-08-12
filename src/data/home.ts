@@ -1,3 +1,5 @@
+import { SITE } from '@/data/site'
+
 /**
  * Copy de la home, 1:1 del original.
  *
@@ -56,10 +58,10 @@ export const HOME = {
   contact: {
     eyebrow: '04 · Contacto',
     heading: 'No esperes un día más para iniciar tu proyecto.',
-    lede: 'San Luis Potosí · Querétaro · Guanajuato — y obras a lo largo de México.',
+    lede: `${SITE.coverage} — y obras a lo largo de México.`,
     blocks: [
-      { label: 'Estudio', lines: ['Manuel J. Cloutier 1129', 'San Luis Potosí, S.L.P.'] },
-      { label: 'Directo', lines: ['admin@archo.com.mx', '+52 444 767 5474'] },
+      { label: 'Estudio', lines: SITE.address.lines },
+      { label: 'Directo', lines: [SITE.email, SITE.phone.display] },
     ],
     linkLabel: 'Iniciar una conversación →',
     linkTo: '/contact',

@@ -176,8 +176,9 @@ export default function MobileMenu({ open, onClose, triggerRef, id }: MobileMenu
         >
           <p className="text-[11px] uppercase tracking-[0.3em] text-archo-mist">Estudio</p>
           <address className="mt-5 space-y-1 text-sm not-italic text-archo-cream">
-            <p>{SITE.address.street}</p>
-            <p>{SITE.address.city}</p>
+            {SITE.address.lines.map((line) => (
+              <p key={line}>{line}</p>
+            ))}
           </address>
           <div className="mt-4 flex flex-col">
             <a
