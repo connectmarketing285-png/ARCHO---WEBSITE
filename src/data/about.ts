@@ -22,7 +22,7 @@ export const ABOUT = {
       'Una obra es un argumento silencioso sobre cómo debería habitarse un lugar — para el siguiente siglo, no para el siguiente titular.',
     paragraphs: [
       'ARCHO nace del deseo de cerrar la brecha entre proyecto y construcción. Operamos como una práctica integral —dibujo, ingeniería y obra bajo un mismo techo— para que nada se pierda en la entrega entre la idea y su materialización.',
-      'Hoy, un equipo de arquitectos, ingenieros y artesanos desarrolla un portafolio acotado de obra residencial, cultural y corporativa en San Luis Potosí, Querétaro, Guanajuato y otros estados del país.',
+      'Hoy, un equipo de arquitectos, ingenieros y artesanos desarrolla un portafolio acotado de obra residencial, cultural y corporativa en San Luis Potosí, Querétaro, Guanajuato, Monterrey, Guadalajara, Baja California y otros estados del país.',
     ],
     image: 'photo-1487958449943-2429e8be8625',
     imageAlt: 'Estudio ARCHO',
