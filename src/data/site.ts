@@ -23,9 +23,13 @@ export const SITE = {
    * colonia, código postal y piso son tres renglones.
    */
   address: {
-    lines: ['Av Santos Degollado 1137, Tangamanga', '78269 San Luis Potosí, S.L.P.', 'Cuarto piso'],
+    lines: [
+      'Prol, Santos Degollado 1137, Tangamanga',
+      '78269 San Luis Potosí, S.L.P.',
+      'Cuarto piso',
+    ],
     /** Una sola línea, para metadatos y para el pie del mapa. */
-    oneLine: 'Av Santos Degollado 1137, Tangamanga, 78269 San Luis Potosí, S.L.P. — Cuarto piso',
+    oneLine: 'Prol, Santos Degollado 1137, Tangamanga, 78269 San Luis Potosí, S.L.P. — Cuarto piso',
   },
 
   phone: {
