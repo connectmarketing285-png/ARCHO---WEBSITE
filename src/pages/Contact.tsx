@@ -1,3 +1,4 @@
+import CareersSection from '@/components/CareersSection'
 import ContactForm from '@/components/ContactForm'
 import PageIntro from '@/components/PageIntro'
 import Reveal from '@/components/Reveal'
@@ -53,7 +54,9 @@ export default function Contact() {
         </div>
       </section>
 
-      <section className="px-6 pb-32 md:px-10">
+      <CareersSection />
+
+      <section className="px-6 py-32 md:px-10">
         <Reveal className="mx-auto max-w-[1600px]">
           {/* En móvil el 16/7 del original queda en una franja de ~160px donde no
               se distingue nada; ahí el mapa necesita altura. */}
