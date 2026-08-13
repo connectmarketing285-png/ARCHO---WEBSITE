@@ -38,9 +38,10 @@
       inyectados desde React: esto es una SPA, así que lo que monta React no
       está en la respuesta inicial que leen los rastreadores.
 
-      Sin `geo` a propósito: la dirección exacta no existe en las bases de
-      geocodificación abiertas y unas coordenadas aproximadas serían peores que
-      ninguna. Google geocodifica a partir de `address`, que sí es exacta.
+      `geo` lleva las coordenadas exactas de la oficina, facilitadas por el
+      cliente. Antes se omitía porque la dirección no resuelve en las bases de
+      geocodificación abiertas y un valor aproximado en datos estructurados es
+      peor que ninguno: Google lo toma como la ubicación declarada del negocio.
     -->
     <script type="application/ld+json">
       {
@@ -64,6 +65,12 @@
           "postalCode": "78269",
           "addressCountry": "MX"
         },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 22.143511,
+          "longitude": -100.996727
+        },
+        "hasMap": "https://www.google.com/maps/search/?api=1&query=22.143511,-100.996727",
         "openingHoursSpecification": [
           {
             "@type": "OpeningHoursSpecification",

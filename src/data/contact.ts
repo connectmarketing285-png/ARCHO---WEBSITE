@@ -66,18 +66,17 @@ export const CONTACT = {
   },
 
   /**
-   * El encuadre anterior era el centro de la ciudad, a 2 km largos de la
-   * oficina. Ahora se centra en el CP 78269 (22.14049, -100.99786), que es el
-   * punto más fiable disponible: ni "Prol. Santos Degollado 1137" ni la colonia
-   * Tangamanga resuelven en OpenStreetMap, y el CP viene de la propia dirección.
+   * Coordenadas exactas de la oficina, facilitadas por el cliente. Sustituyen
+   * al encuadre del centro de la ciudad que traía el original (a más de 2 km) y
+   * al centroide del código postal que se usó mientras tanto.
    *
-   * El pie muestra la dirección en vez de coordenadas: las que había eran
-   * falsas para esta ubicación, y a quien va a visitar el estudio le sirve más
-   * la calle que un par de decimales.
+   * El recuadro abarca ~1 km, suficiente para reconocer el entorno sin perder
+   * la calle. El pie muestra la dirección y no las coordenadas: a quien va a
+   * visitar el estudio le sirve más la calle que unos decimales.
    */
   map: {
-    title: 'Zona del estudio ARCHO en San Luis Potosí',
-    src: 'https://www.openstreetmap.org/export/embed.html?bbox=-101.0099%2C22.1305%2C-100.9859%2C22.1505&layer=mapnik&marker=22.14049%2C-100.99786',
+    title: 'Ubicación del estudio ARCHO en San Luis Potosí',
+    src: 'https://www.openstreetmap.org/export/embed.html?bbox=-101.0017%2C22.1405%2C-100.9917%2C22.1465&layer=mapnik&marker=22.143511%2C-100.996727',
     caption: 'Prol, Santos Degollado 1137 · Tangamanga, S.L.P.',
   },
 } as const
