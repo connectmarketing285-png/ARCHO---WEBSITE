@@ -33,6 +33,69 @@
 
     <!-- El logo es el elemento LCP de la home (marca de agua del hero) y además
          aparece en la cabecera y el pie de todas las rutas. -->
+    <!--
+      Datos estructurados para búsqueda local. Van en el HTML estático y no
+      inyectados desde React: esto es una SPA, así que lo que monta React no
+      está en la respuesta inicial que leen los rastreadores.
+
+      Sin `geo` a propósito: la dirección exacta no existe en las bases de
+      geocodificación abiertas y unas coordenadas aproximadas serían peores que
+      ninguna. Google geocodifica a partir de `address`, que sí es exacta.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "GeneralContractor",
+        "@id": "https://archo.com.mx/#organizacion",
+        "name": "ARCHO Constructora",
+        "alternateName": "ARCHO Estudio",
+        "url": "https://archo.com.mx/",
+        "logo": "https://archo.com.mx/archo-lockup.png",
+        "image": "https://archo.com.mx/archo-lockup.png",
+        "description": "Estudio integral de arquitectura y construcción. Diseño arquitectónico y ejecución de obra como un solo proceso.",
+        "email": "admin@archo.com.mx",
+        "telephone": "+52 440 122 2002",
+        "foundingDate": "2011",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Prol, Santos Degollado 1137, Tangamanga, Cuarto piso",
+          "addressLocality": "San Luis Potosí",
+          "addressRegion": "S.L.P.",
+          "postalCode": "78269",
+          "addressCountry": "MX"
+        },
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            "opens": "09:00",
+            "closes": "19:00"
+          }
+        ],
+        "areaServed": [
+          { "@type": "AdministrativeArea", "name": "San Luis Potosí" },
+          { "@type": "AdministrativeArea", "name": "Querétaro" },
+          { "@type": "AdministrativeArea", "name": "Guanajuato" },
+          { "@type": "AdministrativeArea", "name": "Monterrey" },
+          { "@type": "AdministrativeArea", "name": "Guadalajara" },
+          { "@type": "AdministrativeArea", "name": "Baja California" }
+        ],
+        "sameAs": [
+          "https://www.instagram.com/archo.constructora",
+          "https://www.linkedin.com/company/archo-constructora/"
+        ],
+        "knowsAbout": [
+          "Estructura metálica",
+          "Ingeniería estructural",
+          "Instalaciones",
+          "Estructura de concreto",
+          "Obra residencial",
+          "Carpintería",
+          "Supervisión de obra"
+        ]
+      }
+    </script>
+
     <link rel="preload" as="image" href="/archo-isotipo.png" fetchpriority="high" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />

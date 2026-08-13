@@ -64,7 +64,12 @@ export default function Footer() {
             <ul className="mt-6 space-y-2 text-sm">
               {SITE.social.map((network) => (
                 <li key={network.label}>
-                  <a href={network.href} className={LINK_CLASS}>
+                  <a
+                    href={network.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={LINK_CLASS}
+                  >
                     {network.label}
                   </a>
                 </li>

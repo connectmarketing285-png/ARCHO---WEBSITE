@@ -56,11 +56,10 @@ export const SITE = {
   },
   copyright: '© 2026 ARCHO Estudio. Todos los derechos reservados.',
 
-  // TODO: el cliente debe pasar las URLs reales. En el original apuntan a "#"
-  // (bug técnico #2 del brief: se deja igual por ahora, es contenido).
+  /** Del enlace de Instagram se quita el `?igsh=…`: es un testigo de la sesión
+   *  desde la que se compartió, no forma parte de la dirección del perfil. */
   social: [
-    { label: 'Instagram', href: '#' },
-    { label: 'LinkedIn', href: '#' },
-    { label: 'Behance', href: '#' },
+    { label: 'Instagram', href: 'https://www.instagram.com/archo.constructora' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/company/archo-constructora/' },
   ],
 } as const
