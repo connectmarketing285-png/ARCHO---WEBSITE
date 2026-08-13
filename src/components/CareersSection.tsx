@@ -1,9 +1,8 @@
-import CareersForm from '@/components/CareersForm'
 import Reveal from '@/components/Reveal'
 import SplitHeading from '@/components/SplitHeading'
+import TallyEmbed from '@/components/TallyEmbed'
 import { CAREERS } from '@/data/careers'
 import { REVEAL_DELAYS } from '@/data/home'
-import { careersUploadEnabled } from '@/lib/careers-form'
 
 /**
  * Va sobre `archo-ink` con la retícula de fondo, igual que las secciones
@@ -31,29 +30,24 @@ export default function CareersSection() {
           <p className="mt-10 max-w-md text-base leading-relaxed text-archo-mist md:text-lg">
             {CAREERS.lede}
           </p>
+
+          {/* Alternativa por correo, siempre visible: si el visitante tiene un
+              bloqueador que corta el iframe de Tally, sigue habiendo una vía. */}
+          <p className="mt-10 text-sm text-archo-mist">
+            {CAREERS.fallback.note}{' '}
+            <a
+              href={CAREERS.fallback.href}
+              className="touch-target text-archo-cream underline decoration-archo-orange underline-offset-4 transition-colors hover:text-archo-orange"
+            >
+              {CAREERS.fallback.label}
+            </a>
+          </p>
         </Reveal>
 
         <Reveal delay={REVEAL_DELAYS.section[1]} className="md:col-span-6 md:col-start-7">
-          {careersUploadEnabled ? (
-            <CareersForm />
-          ) : (
-            /* Sin servicio de subida contratado, el formulario no entregaría el
-               CV a ningún sitio. Se ofrece la vía por correo, que sí funciona. */
-            <div className="border-t border-white/10 pt-10">
-              <a
-                href={CAREERS.fallback.href}
-                className="group inline-flex min-h-11 items-center gap-4 border-b border-archo-cream pb-2 text-sm uppercase tracking-[0.24em] text-archo-cream transition-colors hover:border-archo-orange hover:text-archo-orange"
-              >
-                {CAREERS.fallback.label}
-                <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">
-                  →
-                </span>
-              </a>
-              <p className="mt-6 max-w-sm text-sm leading-relaxed text-archo-mist">
-                {CAREERS.fallback.note}
-              </p>
-            </div>
-          )}
+          <div className="border-t border-white/10 pt-10">
+            <TallyEmbed src={CAREERS.embed.src} title={CAREERS.embed.title} />
+          </div>
         </Reveal>
       </div>
     </section>
