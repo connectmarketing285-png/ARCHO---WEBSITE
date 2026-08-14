@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 
 import InmuebleCard from '@/components/InmuebleCard'
-import PageIntro from '@/components/PageIntro'
+import InmueblesHero from '@/components/InmueblesHero'
 import Reveal from '@/components/Reveal'
 import SplitHeading from '@/components/SplitHeading'
 import { REVEAL_DELAYS } from '@/data/home'
@@ -13,18 +13,13 @@ const gridDelay = (index: number) => REVEAL_DELAYS.grid[index % 3]
 export default function Inmuebles() {
   const { servicios, catalogo, cta } = INMUEBLES_PAGE
 
+  // Sin pt-*: la cabecera va a sangre y pasa por debajo del header fijo.
   return (
-    <div className="bg-archo-black pt-32 md:pt-44">
-      <PageIntro
-        eyebrow={INMUEBLES_PAGE.eyebrow}
-        title={INMUEBLES_PAGE.title}
-        lede={INMUEBLES_PAGE.lede}
-        titleClassName="mt-8 max-w-[14ch] text-5xl leading-[0.95] text-archo-cream md:text-8xl"
-        ledeClassName="mt-10 max-w-2xl text-base leading-relaxed text-archo-mist md:text-lg"
-      />
+    <div className="bg-archo-black">
+      <InmueblesHero />
 
       {/* Servicios */}
-      <section className="relative overflow-hidden border-y border-white/5 bg-archo-ink px-6 py-32 md:mt-32 md:px-10 md:py-44">
+      <section className="relative overflow-hidden border-b border-white/5 bg-archo-ink px-6 py-32 md:px-10 md:py-44">
         <div className="blueprint-grid-fine pointer-events-none absolute inset-0 opacity-30" />
 
         <div className="relative mx-auto max-w-[1600px]">

@@ -39,6 +39,22 @@ export const INMUEBLES_PAGE = {
   title: { lead: 'Del plano a', accent: 'las llaves.' },
   lede: 'Desarrollamos, comercializamos y acompañamos la compra de vivienda y espacio comercial. La misma constructora que levanta la obra responde por ella después de entregarla.',
 
+  hero: {
+    /** Imagen de fondo de la cabecera. No se repite en ninguna ficha. */
+    imagen: 'photo-1600585154340-be6161a56a0c',
+    imagenAlt: '',
+    scrollHint: 'Ver cartera ↓',
+    /**
+     * Cifras de la franja bajo la cabecera. No se escriben a mano: se cuentan
+     * desde `INMUEBLES`, así que nunca contradicen al catálogo aunque cambie.
+     */
+    cifras: [
+      { label: 'Inmuebles en cartera' },
+      { label: 'Tipos de propiedad' },
+      { label: 'Formas de operación' },
+    ],
+  },
+
   servicios: {
     eyebrow: 'Qué hacemos',
     heading: { lead: 'Cuatro formas de', accent: 'trabajar contigo.' },
@@ -100,7 +116,7 @@ export const INMUEBLES: readonly Inmueble[] = [
     recamaras: 3,
     banos: 3,
     estacionamientos: 2,
-    imagen: 'photo-1600585154340-be6161a56a0c',
+    imagen: 'photo-1551882547-ff40c63fe5fa',
     alt: 'Fotografía de referencia de una vivienda',
   },
   {
@@ -141,7 +157,7 @@ export const INMUEBLES: readonly Inmueble[] = [
     recamaras: 4,
     banos: 5,
     estacionamientos: 3,
-    imagen: 'photo-1551882547-ff40c63fe5fa',
+    imagen: 'photo-1487958449943-2429e8be8625',
     alt: 'Fotografía de referencia de una residencia',
   },
   {
@@ -152,7 +168,7 @@ export const INMUEBLES: readonly Inmueble[] = [
     ubicacion: 'Zona Industrial, S.L.P.',
     precio: '$3,100,000 MXN',
     superficie: '1,240 m²',
-    imagen: 'photo-1581094794329-c8112a89af12',
+    imagen: 'photo-1504307651254-35680f356dfd',
     alt: 'Fotografía de referencia de un terreno en desarrollo',
   },
   {
