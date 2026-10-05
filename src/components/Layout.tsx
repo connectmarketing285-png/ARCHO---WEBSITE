@@ -3,6 +3,9 @@ import { Outlet, useLocation } from 'react-router-dom'
 
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
+import { NAV_ITEMS } from '@/data/nav'
+import { SITE } from '@/data/site'
+import { trackPageView } from '@/lib/analytics'
 
 /** React Router no reinicia el scroll al navegar; sin esto la ruta nueva abre a media página. */
 function ScrollToTop() {
@@ -10,6 +13,26 @@ function ScrollToTop() {
 
   useEffect(() => {
     window.scrollTo(0, 0)
+  }, [pathname])
+
+  return null
+}
+
+function pageTitle(pathname: string) {
+  const item = NAV_ITEMS.find((i) => i.to === pathname)
+  return !item || item.to === '/' ? SITE.title : `${item.label} — ${SITE.name}`
+}
+
+/**
+ * Título del documento y vista de página en GA4 en cada cambio de ruta.
+ * Van juntos y en este orden porque la vista toma el título de `document.title`.
+ */
+function PageView() {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    document.title = pageTitle(pathname)
+    trackPageView()
   }, [pathname])
 
   return null
@@ -24,6 +47,7 @@ export default function Layout() {
   return (
     <div className="relative min-h-screen bg-archo-black text-archo-cream">
       <ScrollToTop />
+      <PageView />
 
       <a
         href="#contenido"
