@@ -1,5 +1,8 @@
 export const SITE = {
   name: 'ARCHO',
+  /** Título de la home; el mismo que trae el `<title>` de index.html. Las demás
+   *  rutas usan "<etiqueta del nav> — ARCHO" (ver Layout). */
+  title: 'ARCHO — Diseño y construcción, un solo proceso.',
   /**
    * Isotipo blanco entregado por el cliente. Sustituye al lockup horizontal
    * anterior (marca + "ARCHO CONSTRUCTORA"), así que el ratio pasa de 3.5 a
