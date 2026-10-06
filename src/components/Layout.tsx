@@ -5,7 +5,7 @@ import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import { NAV_ITEMS } from '@/data/nav'
 import { SITE } from '@/data/site'
-import { trackPageView } from '@/lib/analytics'
+import { trackPageView, trackWhatsAppClicks } from '@/lib/analytics'
 
 /** React Router no reinicia el scroll al navegar; sin esto la ruta nueva abre a media página. */
 function ScrollToTop() {
@@ -43,6 +43,10 @@ export default function Layout() {
   // quedar inerte mientras está abierto es el contenido de la página —
   // hermano del Header, no hijo suyo.
   const [menuOpen, setMenuOpen] = useState(false)
+
+  // El Layout envuelve todas las rutas: un solo listener cubre cada enlace de
+  // WhatsApp del sitio.
+  useEffect(() => trackWhatsAppClicks(), [])
 
   return (
     <div className="relative min-h-screen bg-archo-black text-archo-cream">

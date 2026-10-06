@@ -9,6 +9,21 @@ Repositorio para documentos de sitio web de Archo
 - **Configuración obligatoria en el panel de GA4:** Administrar → Flujos de datos → (flujo web) → Medición mejorada → engrane de *Vistas de página* → desactivar **"Cambios de página basados en eventos del historial del navegador"**. Si sigue activo, cada navegación interna se registra dos veces (lo hace GA4 y lo hace el sitio).
 - **Coste medido (Lighthouse móvil, home, mediana de 5 corridas intercaladas, 2026-10-05):** TBT 93 → 233 ms, rendimiento 92 → 88, +193 KB transferidos. LCP y FCP sin cambio.
 
+### Evento `whatsapp_click`
+
+Se envía al pulsar cualquier enlace a `wa.me` del sitio (`trackWhatsAppClicks` en `src/lib/analytics.ts`, un solo listener montado en el Layout). Hoy hay dos: el botón de la cabecera, presente en todas las rutas, y la línea "Directo" de `/contact`.
+
+| Parámetro | Valores | Para qué |
+|---|---|---|
+| `button_location` | `cabecera`, `contenido`, `pie` (o el valor de `data-whatsapp` del enlace) | Qué botón fue |
+| `click_path` | `/`, `/services`, `/contact`… | Desde qué página |
+| `link_url` | `https://wa.me/524401222002` | Destino; GA4 ya lo trae como dimensión "URL del enlace" |
+
+- **Nombre propio, no `generate_lead`:** Google Ads importa conversiones de GA4 por nombre de evento. Si WhatsApp y el formulario compartieran `generate_lead`, no se podría pujar solo por WhatsApp, que es lo que busca la campaña.
+- **No usar `page_path` ni `transport_type`:** gtag reserva `page_path` y lo descarta. `transport_type: 'beacon'` es de Universal Analytics: GA4 lo envía como parámetro basura. GA4 ya envía con `fetch` + `keepalive: true` (verificado), y el navegador completa ese envío aunque la página se descargue.
+- **Para verlo en informes y exploraciones** (en tiempo real no hace falta): registrar `button_location` y `click_path` como dimensiones personalizadas de evento en Administrar → Definiciones personalizadas.
+- **No confundir con `click`:** si la medición mejorada tiene activados los clics salientes, GA4 registra además un `click` con `outbound=true` para el mismo enlace. Es otro evento; el que se mide es `whatsapp_click`.
+
 ### Datos que no hay que volver a suponer
 
 - **El formulario de contacto es Web3Forms, no Tally.** Lo envía nuestro propio código (`src/lib/contact-form.ts`) con `fetch` a la API de Web3Forms.
