@@ -12,8 +12,17 @@
     <meta name="author" content="ARCHO Estudio" />
     <meta name="theme-color" content="#0A0A0A" />
 
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="apple-touch-icon" href="/favicon.png" />
+    <!--
+      Todos salen del mismo dibujo: isotipo blanco al 64% del alto sobre el
+      negro del sitio, opaco y centrado ópticamente (ver README, "Favicon").
+      El de 192 es el que toma Google: pide múltiplos de 48 px y lo recorta a
+      círculo en los resultados. El .ico (16/32/48) es para navegadores y
+      lectores que piden /favicon.ico sin leer el HTML.
+    -->
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="icon" type="image/png" href="/icon-192.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content="ARCHO — Diseño y construcción, un solo proceso." />
