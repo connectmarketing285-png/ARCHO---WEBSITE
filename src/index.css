@@ -146,6 +146,107 @@
       transition: none;
     }
   }
+
+  /* -------------------------------------------------------------------------
+     Cuerpo de los artículos del blog (components/blog/PortableTexto.tsx).
+     Sin @tailwindcss/typography: son seis elementos y deben verse como el
+     resto del sitio, no como el estilo por defecto de un plugin. Mismos
+     tokens: crema para el texto, niebla para lo secundario, naranja para los
+     acentos y font-display en los encabezados.
+     ------------------------------------------------------------------------- */
+  .prosa {
+    color: var(--color-archo-cream);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+  .prosa > * + * {
+    margin-top: 1.4em;
+  }
+  .prosa h2,
+  .prosa h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+  .prosa h2 {
+    font-size: 2rem;
+    margin-top: 2.4em;
+  }
+  .prosa h3 {
+    font-size: 1.5rem;
+    margin-top: 2em;
+  }
+  .prosa h2 + *,
+  .prosa h3 + * {
+    margin-top: 0.8em;
+  }
+  .prosa strong {
+    font-weight: 600;
+    color: #fff;
+  }
+  .prosa em {
+    font-style: italic;
+  }
+  .prosa a {
+    text-decoration: underline;
+    text-decoration-color: var(--color-archo-orange);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    transition: color 0.3s;
+  }
+  .prosa a:hover {
+    color: var(--color-archo-orange);
+  }
+  .prosa ul,
+  .prosa ol {
+    padding-left: 1.4em;
+  }
+  .prosa ul {
+    list-style: none;
+  }
+  /* La raya naranja del eyebrow, como viñeta. */
+  .prosa ul > li {
+    position: relative;
+  }
+  .prosa ul > li::before {
+    content: '';
+    position: absolute;
+    left: -1.4em;
+    top: 0.85em;
+    width: 0.75em;
+    height: 1px;
+    background: var(--color-archo-orange);
+  }
+  .prosa ol {
+    list-style: decimal;
+  }
+  .prosa ol > li::marker {
+    color: var(--color-archo-mist);
+    font-variant-numeric: tabular-nums;
+  }
+  .prosa li + li,
+  .prosa li > ul,
+  .prosa li > ol {
+    margin-top: 0.6em;
+  }
+  .prosa figure img {
+    width: 100%;
+    height: auto;
+    background: var(--color-archo-ink);
+  }
+
+  @media (min-width: 48rem) {
+    .prosa {
+      font-size: 1.125rem;
+    }
+    .prosa h2 {
+      font-size: 2.5rem;
+    }
+    .prosa h3 {
+      font-size: 1.75rem;
+    }
+  }
 }
 
 @layer base {

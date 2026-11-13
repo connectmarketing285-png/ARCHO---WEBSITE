@@ -30,3 +30,7 @@ dist-ssr
 
 # Enlace local del proyecto que crea la CLI de Vercel.
 .vercel
+
+# Contenido del blog traído de Sanity en cada build (tools/traer-blog.mjs).
+src/data/blog.generated.json
+public/datos/

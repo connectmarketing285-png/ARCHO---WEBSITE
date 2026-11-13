@@ -50,11 +50,14 @@ execSync(`npx vite build --ssr src/entry-servidor.tsx --outDir "${TEMPORAL}" --l
 const {
   render,
   RUTAS,
-  SEO,
   SEO_404,
+  ID_DATOS_ARTICULO,
+  blogPostingJsonLd,
   comprobarRutas,
+  metaDeRuta,
   metadatosDe,
   organizacionJsonLd,
+  postDeRuta,
   robotsTxt,
   sitemapXml,
 } = await import(pathToFileURL(join(TEMPORAL, 'entry-servidor.js')).href)
@@ -101,25 +104,68 @@ function bloqueJsonLd(datos) {
   return `<script type="application/ld+json">\n${json}\n    </script>`
 }
 
-function documento(ruta, meta, { es404 = false } = {}) {
-  const cuerpo = render(ruta)
-  if (!cuerpo.includes('<main')) throw new Error(`El HTML de ${ruta} salió sin <main>.`)
+/** El JSON del artículo para hidratar, con el mismo escape de `<` que el JSON-LD. */
+function bloqueArticulo(articulo) {
+  const json = JSON.stringify(articulo).replace(/</g, '\\u003c')
+  return `<script type="application/json" id="${ID_DATOS_ARTICULO}">${json}</script>`
+}
 
+/* Cómo escapa React el texto al pintarlo, para buscarlo en el HTML. */
+const comoReact = (s) =>
+  s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+
+/**
+ * EL ARTÍCULO TIENE QUE ESTAR ENTERO EN EL HTML. Es el motivo de prerenderizar
+ * el blog: si el cuerpo llegara por JS, quien no lo ejecuta vería un artículo
+ * vacío. Se comprueba bloque a bloque que el texto de cada uno aparece en la
+ * página, y que no quedó el aviso de "Cargando".
+ */
+function comprobarArticulo(ruta, html, articulo) {
+  if (html.includes('Cargando el artículo')) {
+    throw new Error(`${ruta}: el cuerpo no se prerenderizó (quedó el aviso de carga).`)
+  }
+  for (const bloque of articulo.cuerpo) {
+    if (bloque._type !== 'block') continue
+    const texto = (bloque.children ?? [])
+      .find((c) => c.text?.trim())
+      ?.text.split('\n')[0]
+      .slice(0, 40)
+    if (texto && !html.includes(comoReact(texto))) {
+      throw new Error(`${ruta}: falta en el HTML el bloque que empieza por "${texto}".`)
+    }
+  }
+}
+
+function documento(ruta, meta, { es404 = false, articulo = null } = {}) {
+  const cuerpo = render(ruta, articulo)
+  if (!cuerpo.includes('<main')) throw new Error(`El HTML de ${ruta} salió sin <main>.`)
+  if (articulo) comprobarArticulo(ruta, cuerpo, articulo)
+
+  const post = es404 ? undefined : postDeRuta(ruta)
   const datos = metadatosDe(ruta, meta, es404)
   const cabecera = [
     `<title>${escapar(datos.title)}</title>`,
     ...(datos.canonical ? [`<link rel="canonical" href="${escapar(datos.canonical)}" />`] : []),
     ...datos.nombradas.map(([k, v]) => `<meta name="${k}" content="${escapar(v)}" />`),
     ...datos.propiedades.map(([k, v]) => `<meta property="${k}" content="${escapar(v)}" />`),
-    /* Solo la portada; el porqué está en seo.ts. */
+    /* La entidad de la empresa, solo en la portada; el porqué está en seo.ts. */
     ...(ruta === '/' ? [bloqueJsonLd(organizacionJsonLd())] : []),
+    ...(post ? [bloqueJsonLd(blogPostingJsonLd(post))] : []),
   ]
     .map((linea) => `    ${linea}\n`)
     .join('')
 
   return base
     .replace('</head>', `${cabecera}  </head>`)
-    .replace('<div id="root"></div>', `<div id="root">${cuerpo}</div>`)
+    .replace(
+      '<div id="root"></div>',
+      `<div id="root">${cuerpo}</div>${articulo ? `\n    ${bloqueArticulo(articulo)}` : ''}`,
+    )
 }
 
 /* 3 · Un archivo por ruta. La portada se queda como index.html. */
@@ -132,8 +178,16 @@ const escribir = (archivo, html) => {
   escritos.push([archivo, html.length])
 }
 
+/* Los artículos van en dist/blog/<slug>.html, junto a dist/blog.html (el
+   listado); con cleanUrls, Vercel los sirve en /blog/<slug> y /blog. El
+   cuerpo de cada uno lo dejó tools/traer-blog.mjs en public/datos/blog/, y
+   Vite lo copió a dist/. */
 for (const ruta of RUTAS) {
-  escribir(ruta === '/' ? 'index.html' : `${ruta.slice(1)}.html`, documento(ruta, SEO[ruta]))
+  const post = postDeRuta(ruta)
+  const articulo = post
+    ? JSON.parse(readFileSync(join(DIST, 'datos', 'blog', `${post.slug}.json`), 'utf8'))
+    : null
+  escribir(ruta === '/' ? 'index.html' : `${ruta.slice(1)}.html`, documento(ruta, metaDeRuta(ruta), { articulo }))
 }
 
 /* El 404 se pinta contra una ruta que no existe, para que el router caiga en
@@ -148,7 +202,8 @@ escribir('robots.txt', robotsTxt())
 
 rmSync(TEMPORAL, { recursive: true, force: true })
 
+const ancho = Math.max(...escritos.map(([a]) => a.length)) + 2
 for (const [archivo, bytes] of escritos) {
-  console.log(`  ${DIST}/${archivo.padEnd(16)} ${String(bytes).padStart(7)} B`)
+  console.log(`  ${DIST}/${archivo.padEnd(ancho)} ${String(bytes).padStart(7)} B`)
 }
 console.log(`\n${paginas} páginas prerenderizadas, más sitemap.xml y robots.txt.`)

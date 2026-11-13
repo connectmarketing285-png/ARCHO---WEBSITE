@@ -1,6 +1,8 @@
 import { FOUNDED_YEAR } from '@/data/about'
+import { POSTS, postPorSlug, rutaPost, type PostResumen } from '@/data/blog'
 import { NAV_ITEMS } from '@/data/nav'
 import { SITE } from '@/data/site'
+import { dimensiones, urlImagen } from '@/lib/sanity-imagen'
 
 /**
  * METADATOS, SITEMAP, ROBOTS Y DATOS ESTRUCTURADOS  ·  una sola tabla
@@ -76,6 +78,11 @@ export const SEO = {
     description:
       'Inicia una conversación con ARCHO: oficina en San Luis Potosí, obra en Querétaro, Guanajuato, Monterrey, Guadalajara y Baja California.',
   },
+  '/blog': {
+    title: titulo('Blog'),
+    description:
+      'Artículos de ARCHO sobre presupuestos, procesos, materiales y obra: criterios para decidir mejor antes y durante una construcción.',
+  },
 } as const satisfies Record<string, MetaRuta>
 
 export type Ruta = keyof typeof SEO
@@ -89,15 +96,64 @@ export const SEO_404: MetaRuta = {
   description: 'La dirección no existe o cambió. Desde aquí se llega a todas las páginas de ARCHO.',
 }
 
-export const RUTAS = Object.keys(SEO) as Ruta[]
+/** Las rutas fijas: las del menú, con sus metadatos escritos arriba. */
+export const RUTAS_FIJAS = Object.keys(SEO) as Ruta[]
+
+/** Una por artículo publicado, del listado que trae tools/traer-blog.mjs. */
+export const RUTAS_BLOG = POSTS.map((p) => rutaPost(p.slug))
+
+/** Todas: las que se prerenderizan y las que van al sitemap. */
+export const RUTAS: readonly string[] = [...RUTAS_FIJAS, ...RUTAS_BLOG]
 
 export function esRuta(pathname: string): pathname is Ruta {
   return Object.hasOwn(SEO, pathname)
 }
 
+/** El artículo de una ruta /blog/<slug>, si está publicado. */
+export function postDeRuta(ruta: string) {
+  const slug = /^\/blog\/([^/]+)$/.exec(ruta)?.[1]
+  return slug ? postPorSlug(slug) : undefined
+}
+
+/**
+ * Título y description de un artículo. Los campos SEO del Studio mandan si
+ * están rellenos; si no, el título y el extracto. Al título se le añade
+ * " — ARCHO", como al resto de páginas.
+ */
+export function metaDePost(post: PostResumen): MetaRuta {
+  return {
+    title: titulo(post.seoTitulo ?? post.titulo),
+    description: post.seoDescripcion ?? post.extracto,
+  }
+}
+
+/** Los metadatos de cualquier ruta, fija o de artículo; `null` si no existe. */
+export function metaDeRuta(ruta: string): MetaRuta | null {
+  if (esRuta(ruta)) return SEO[ruta]
+  const post = postDeRuta(ruta)
+  return post ? metaDePost(post) : null
+}
+
 /** Lo que usa Layout al navegar: el título de la ruta, o el del 404. */
 export function pageTitle(pathname: string) {
-  return esRuta(pathname) ? SEO[pathname].title : SEO_404.title
+  return (metaDeRuta(pathname) ?? SEO_404).title
+}
+
+/**
+ * La tarjeta de enlace de un artículo: su imagen principal, recortada a la
+ * proporción de las tarjetas (1200x630) alrededor del punto de interés. Si la
+ * imagen es más estrecha que 1200 px, el CDN no la agranda: sale al ancho del
+ * original y se declara con ese tamaño.
+ */
+function ogImagenDePost(post: PostResumen) {
+  const proporcion = OG_IMAGE.width / OG_IMAGE.height
+  const width = Math.min(OG_IMAGE.width, dimensiones(post.imagen).width)
+  return {
+    url: urlImagen(post.imagen, OG_IMAGE.width, proporcion),
+    width,
+    height: Math.round(width / proporcion),
+    alt: post.imagen.alt,
+  }
 }
 
 /**
@@ -109,7 +165,7 @@ export function pageTitle(pathname: string) {
 export function comprobarRutas() {
   const menu = NAV_ITEMS.map((i) => i.to)
   const faltan = menu.filter((r) => !esRuta(r))
-  const sobran = RUTAS.filter((r) => !menu.includes(r))
+  const sobran = RUTAS_FIJAS.filter((r) => !menu.includes(r))
   if (faltan.length || sobran.length) {
     throw new Error(
       `seo.ts y nav.ts no coinciden. Sin metadatos: [${faltan.join(', ')}]. Sin ruta en el menú: [${sobran.join(', ')}].`,
@@ -130,6 +186,12 @@ export function metadatosDe(ruta: string, meta: MetaRuta, es404 = false) {
      correcta. Y una página noindex no compite por ninguna URL. */
   const url = es404 ? null : `${SITE_URL}${ruta === '/' ? '/' : ruta}`
 
+  /* Un artículo es `og:type=article`, con su imagen y sus fechas. */
+  const post = es404 ? undefined : postDeRuta(ruta)
+  const imagen = post
+    ? ogImagenDePost(post)
+    : { url: `${SITE_URL}${OG_IMAGE.path}`, width: OG_IMAGE.width, height: OG_IMAGE.height, alt: OG_IMAGE.alt }
+
   return {
     title: meta.title,
     canonical: url,
@@ -141,17 +203,65 @@ export function metadatosDe(ruta: string, meta: MetaRuta, es404 = false) {
       ...(es404 ? [['robots', 'noindex, follow']] : []),
     ] as [string, string][],
     propiedades: [
-      ['og:type', 'website'],
+      ['og:type', post ? 'article' : 'website'],
       ['og:site_name', SITE.name],
       ['og:locale', 'es_MX'],
       ['og:title', meta.title],
       ['og:description', meta.description],
       ...(url ? [['og:url', url]] : []),
-      ['og:image', `${SITE_URL}${OG_IMAGE.path}`],
-      ['og:image:width', String(OG_IMAGE.width)],
-      ['og:image:height', String(OG_IMAGE.height)],
-      ['og:image:alt', OG_IMAGE.alt],
+      ['og:image', imagen.url],
+      ['og:image:width', String(imagen.width)],
+      ['og:image:height', String(imagen.height)],
+      ['og:image:alt', imagen.alt],
+      ...(post
+        ? [
+            ['article:published_time', post.publishedAt],
+            ['article:modified_time', post.updatedAt],
+          ]
+        : []),
     ] as [string, string][],
+  }
+}
+
+/** ¿El autor escrito en el Studio es la propia empresa ("Archo Constructora")? */
+const firmaDeArcho = (autor: string | null) => !autor || /\barcho\b/i.test(autor)
+
+/**
+ * Datos estructurados de un artículo (schema.org BlogPosting), uno por página.
+ *
+ * `publisher` apunta por `@id` a la entidad de la portada (`#organizacion`,
+ * el GeneralContractor de `organizacionJsonLd`). Lleva además nombre, URL y
+ * logo porque la entidad completa está en otra página y un lector de datos
+ * estructurados no siempre sigue la referencia.
+ *
+ * `author`: una persona si el Studio trae un nombre propio; la empresa si el
+ * campo está vacío o dice ARCHO (el primer artículo firma "Archo
+ * Constructora", que no es una Person).
+ */
+export function blogPostingJsonLd(post: PostResumen) {
+  const url = `${SITE_URL}${rutaPost(post.slug)}`
+  const organizacion = {
+    '@type': 'GeneralContractor',
+    '@id': `${SITE_URL}/#organizacion`,
+    name: 'ARCHO Constructora',
+    url: `${SITE_URL}/`,
+    logo: { '@type': 'ImageObject', url: `${SITE_URL}${SITE.lockup}` },
+  }
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    '@id': `${url}#articulo`,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    url,
+    headline: post.titulo,
+    description: metaDePost(post).description,
+    image: [urlImagen(post.imagen, 1920)],
+    datePublished: post.publishedAt,
+    dateModified: post.updatedAt,
+    inLanguage: 'es-MX',
+    author: firmaDeArcho(post.autor) ? organizacion : { '@type': 'Person', name: post.autor },
+    publisher: organizacion,
   }
 }
 
@@ -230,14 +340,30 @@ export function robotsTxt() {
 /**
  * Las rutas reales; el 404 no entra.
  *
- * Sin `changefreq` ni `priority`: Google los ignora y lo ha dicho por escrito
- * (el sitemap anterior traía `priority`). Sin `lastmod` en las páginas fijas:
- * la fecha del build diría que el contenido cambió en cada despliegue, y un
- * `lastmod` que miente se deja de mirar. Entrará con el blog, donde sí hay
- * fechas reales de publicación y edición.
+ * Sin `changefreq` ni `priority`: Google los ignora y lo ha dicho por escrito.
+ *
+ * `lastmod` SOLO DONDE ES VERDAD. Cada artículo lleva su `_updatedAt` de
+ * Sanity (la última vez que se publicó un cambio), y /blog el del artículo
+ * editado más recientemente, porque su contenido es ese listado. Las páginas
+ * fijas no lo llevan: la fecha del build diría que cambiaron en cada
+ * despliegue, y un `lastmod` que miente se deja de mirar.
  */
 export function sitemapXml() {
-  const urls = RUTAS.map((ruta) => `  <url><loc>${SITE_URL}${ruta}</loc></url>`).join('\n')
+  const ultimoArticulo = POSTS.map((p) => p.updatedAt).sort().at(-1)
+  const entradas = [
+    ...RUTAS_FIJAS.map((ruta) => ({
+      ruta: ruta as string,
+      lastmod: ruta === '/blog' ? ultimoArticulo : undefined,
+    })),
+    ...POSTS.map((p) => ({ ruta: rutaPost(p.slug), lastmod: p.updatedAt })),
+  ]
+  const urls = entradas
+    .map(({ ruta, lastmod }) =>
+      lastmod
+        ? `  <url><loc>${SITE_URL}${ruta}</loc><lastmod>${lastmod}</lastmod></url>`
+        : `  <url><loc>${SITE_URL}${ruta}</loc></url>`,
+    )
+    .join('\n')
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',

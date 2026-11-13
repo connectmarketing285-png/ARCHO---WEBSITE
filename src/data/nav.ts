@@ -3,13 +3,17 @@ export type NavItem = {
   to: string
 }
 
-/** Orden y etiquetas exactos del nav del sitio original. */
+/**
+ * Orden y etiquetas del nav del sitio original, más Blog: enlazarlo desde
+ * todas las páginas es lo que hace que Google lo descubra y lo rastree.
+ */
 export const NAV_ITEMS: readonly NavItem[] = [
   { label: 'Inicio', to: '/' },
   { label: 'Proyectos', to: '/projects' },
   { label: 'Servicios', to: '/services' },
   { label: 'Estudio', to: '/about' },
   { label: 'Proceso', to: '/process' },
+  { label: 'Blog', to: '/blog' },
   { label: 'Contacto', to: '/contact' },
 ]
 
