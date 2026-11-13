@@ -1,0 +1,4 @@
+node_modules
+# Salida de `sanity build` y caché local de la CLI.
+dist
+.sanity
