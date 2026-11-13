@@ -48,6 +48,27 @@ Cuando lleguen hay que:
 1. Publicar el aviso de privacidad y enlazarlo desde el pie y los formularios.
 2. Montar el banner y conectar Consent Mode v2 de Google (`gtag('consent', 'default', …)` antes del `config` en `index.html`) para que GA4 no ponga cookies hasta que el visitante acepte.
 
+## Blog: publicar desde Sanity
+
+Los artículos se escriben en el Studio de Sanity (`studio/`). El sitio **no** lee Sanity mientras alguien lo visita: los artículos entran en el sitio cuando se construye. Por eso cada publicación dispara un nuevo despliegue.
+
+**Cómo funciona:** un webhook de Sanity (filtro `_type == "post"`, dataset `production`) llama a un Deploy Hook de Vercel cada vez que se publica, se vuelve a publicar, se despublica o se borra un artículo. Vercel construye el sitio de nuevo con lo que esté publicado en ese momento (`tools/traer-blog.mjs`) y lo pone en línea. La URL del Deploy Hook está configurada en Sanity (sanity.io/manage → API → Webhooks), no en este repositorio: quien la tenga puede lanzar despliegues.
+
+### Lo que hay que saber en Connect
+
+| Acción en el Studio | Qué pasa en el sitio |
+|---|---|
+| **Publicar** un artículo nuevo | Aparece en `/blog`, en su propia URL `/blog/<slug>` y en el sitemap. |
+| **Editar y volver a publicar** | El sitio se reconstruye con la versión nueva. |
+| **Guardar sin publicar** (borrador) | Nada. Los borradores nunca salen al sitio ni disparan despliegues. |
+| **Despublicar** o **borrar** | El artículo sale de `/blog` y del sitemap, y **su URL da 404** (página "no encontrada", marcada para que Google no la indexe). Si alguien ya la compartió, ese enlace deja de funcionar. |
+
+- **Cuánto tarda:** normalmente **1 a 2 minutos** desde que se pulsa *Publicar* hasta que se ve en el sitio. El build en sí tarda unos 11 s (medido en local, 2026-11-13). El resto es la cola de Vercel, la instalación y el despliegue. No hace falta hacer nada más: con recargar la página basta, el navegador no guarda la versión vieja.
+- **Varias publicaciones seguidas:** cada una lanza un despliegue. Vercel los encola y el último incluye todo lo publicado. No hace falta esperar entre una y otra.
+- **Si no aparece después de 5 minutos:** probablemente falló el build. El sitio **no se rompe**: Vercel deja en línea la última versión buena. El build se detiene a propósito si Sanity no responde o si un artículo está incompleto (el mensaje dice cuál). Hay que revisar los despliegues en el panel de Vercel y, en Sanity, el historial de entregas del webhook.
+- **Despublicar no lo borra de Google al instante.** Google lo quita cuando vuelve a pasar por la URL y recibe el 404, lo que puede tardar días. Para que salga antes: Search Console → Eliminaciones.
+- **Cambiar un slug ya publicado** equivale a despublicar la URL vieja: esa URL pasa a dar 404. Mejor no hacerlo con artículos que ya se compartieron.
+
 ## Favicon
 
 Todos los iconos salen del mismo dibujo, generado desde `brand/ISOTIPO BLANCO@4x.png`:
