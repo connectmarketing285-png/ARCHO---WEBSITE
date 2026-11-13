@@ -114,7 +114,7 @@ export default function MobileMenu({ open, onClose, triggerRef, id }: MobileMenu
       aria-modal="true"
       aria-label="Menú principal"
       inert={!open}
-      className={`fixed inset-0 z-40 bg-archo-black transition-opacity duration-500 md:hidden ${
+      className={`fixed inset-0 z-40 bg-archo-black transition-opacity duration-500 lg:hidden ${
         open ? 'visible opacity-100' : 'invisible opacity-0'
       }`}
       style={{ transitionTimingFunction: EASING }}

@@ -43,7 +43,12 @@ export default function Header({ menuOpen, onMenuOpenChange }: HeaderProps) {
         <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between px-6 md:h-20 md:px-10">
           <Logo variant="lockup" />
 
-          <nav className="hidden items-center gap-10 md:flex" aria-label="Navegación principal">
+          {/* Desde lg (1024px) y no desde md: con siete enlaces, entre 768 y
+              ~1000px el nav no cabe junto al logo y al botón de WhatsApp (el
+              logo se aplastaba a 0px y WhatsApp salía de pantalla; con seis ya
+              iba justo). Por debajo de lg manda la hamburguesa. El espacio
+              entre enlaces baja a 20px en lg y vuelve a 40px en xl. */}
+          <nav className="hidden items-center gap-5 lg:flex xl:gap-10" aria-label="Navegación principal">
             {NAV_ITEMS.map((item) => (
               <NavLink
                 key={item.to}
@@ -77,7 +82,7 @@ export default function Header({ menuOpen, onMenuOpenChange }: HeaderProps) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={SITE.whatsapp.a11yLabel}
-            className="ml-auto inline-flex min-h-11 min-w-11 items-center justify-center gap-2.5 border border-white/15 px-3.5 text-[11px] uppercase tracking-[0.24em] text-archo-mist transition-colors hover:border-archo-orange hover:text-archo-cream md:ml-0 md:px-4"
+            className="ml-auto inline-flex min-h-11 min-w-11 items-center justify-center gap-2.5 border border-white/15 px-3.5 text-[11px] uppercase tracking-[0.24em] text-archo-mist transition-colors hover:border-archo-orange hover:text-archo-cream md:px-4 lg:ml-0"
           >
             <WhatsAppIcon className="h-4 w-4 shrink-0 text-archo-orange" />
             <span className="hidden md:inline">{SITE.whatsapp.label}</span>
@@ -90,7 +95,7 @@ export default function Header({ menuOpen, onMenuOpenChange }: HeaderProps) {
             aria-label={menuOpen ? 'Cerrar menú' : 'Menú'}
             aria-expanded={menuOpen}
             aria-controls={MENU_ID}
-            className="-mr-3 ml-1 inline-flex h-11 w-11 items-center justify-center text-archo-cream md:hidden"
+            className="-mr-3 ml-1 inline-flex h-11 w-11 items-center justify-center text-archo-cream lg:hidden"
           >
             <MenuIcon open={menuOpen} reducedMotion={prefersReducedMotion} />
           </button>
