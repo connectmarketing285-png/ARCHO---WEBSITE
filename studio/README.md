@@ -2,8 +2,8 @@
 
 Panel de edición del blog (Sanity). Es un proyecto aparte del sitio: tiene su
 propio `package.json`, no entra en el bundle de `archo.com.mx` ni en su build, y
-se publica en `*.sanity.studio` para que el equipo entre desde el navegador sin
-instalar nada.
+se publica en **https://archo-blog.sanity.studio** para que el equipo entre desde
+el navegador sin instalar nada.
 
 - Proyecto: `527gs4h8` · Dataset: `production` (público, el sitio lo lee sin token)
 - Requiere Node 22.12 o superior
@@ -16,20 +16,17 @@ Desde esta carpeta (`studio/`):
 npm install          # la primera vez
 npm run dev          # Studio local en http://localhost:3333
 npm run validar      # revisa el esquema sin abrir el Studio
-npm run deploy       # compila y publica en https://<nombre>.sanity.studio
+npm run deploy       # compila y publica en https://archo-blog.sanity.studio
 ```
 
-## Publicar el Studio (la primera vez)
+## Publicar el Studio
 
 1. `npx sanity login`, con la cuenta de Connect que administra el proyecto.
-2. `npm run deploy`. La CLI pregunta el nombre del host: el Studio queda en
-   `https://<nombre>.sanity.studio`. El nombre es único entre todos los
-   proyectos de Sanity; si está tomado, pide otro.
-3. Para no volver a escribirlo, ponlo en `sanity.cli.ts` como `studioHost`.
+2. `npm run deploy`. No pregunta nada: `deployment.appId` en `sanity.cli.ts`
+   identifica el Studio ya desplegado en https://archo-blog.sanity.studio.
 
-Los despliegues siguientes son solo `npm run deploy`. El dominio
-`*.sanity.studio` queda autorizado (CORS) solo; `localhost:3333` también viene
-autorizado si el proyecto se creó con la CLI. Si `npm run dev` da un error de
+El dominio `*.sanity.studio` queda autorizado (CORS) solo; `localhost:3333`
+también viene autorizado si el proyecto se creó con la CLI. Si `npm run dev` da un error de
 CORS, se añade en sanity.io/manage → proyecto → API → CORS origins, con
 credenciales permitidas.
 
