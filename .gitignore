@@ -27,3 +27,6 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Enlace local del proyecto que crea la CLI de Vercel.
+.vercel
