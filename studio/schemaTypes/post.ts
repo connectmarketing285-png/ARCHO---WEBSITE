@@ -20,6 +20,17 @@ import { FORMATO_SLUG, slugificar } from './slug'
 const LIMITE_DESCRIPCION = 160
 /** A partir de aquí Google suele recortar el título en los resultados. */
 const LIMITE_TITULO_SEO = 60
+/** Ancho que piden WhatsApp, LinkedIn y Facebook para la vista previa grande. */
+const ANCHO_MINIMO_IMAGEN = 1200
+
+/**
+ * Sanity guarda las medidas en el id del asset: `image-<hash>-1600x900-jpg`.
+ * Leerlas de ahí evita una consulta extra cada vez que se valida.
+ */
+function anchoDeImagen(ref: string | undefined): number | null {
+  const medidas = ref?.match(/-(\d+)x\d+-[a-z0-9]+$/i)
+  return medidas ? Number(medidas[1]) : null
+}
 
 export const post = defineType({
   name: 'post',
@@ -121,7 +132,17 @@ export const post = defineType({
             }),
         }),
       ],
-      validation: (Rule) => Rule.required().error('El artículo necesita una imagen principal.'),
+      validation: (Rule) => [
+        Rule.required().error('El artículo necesita una imagen principal.'),
+        /* Aviso, no error: deja publicar, pero aparece antes de que alguien
+           comparta el enlace y la vista previa salga borrosa. */
+        Rule.custom((imagen) => {
+          const ancho = anchoDeImagen((imagen as { asset?: { _ref?: string } } | undefined)?.asset?._ref)
+          return ancho !== null && ancho < ANCHO_MINIMO_IMAGEN
+            ? `La imagen mide ${ancho}px de ancho. Sube una de al menos ${ANCHO_MINIMO_IMAGEN}px: más chica se ve borrosa en la cabecera y al compartir en WhatsApp o LinkedIn.`
+            : true
+        }).warning(),
+      ],
     }),
 
     cuerpo,
