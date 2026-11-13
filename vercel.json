@@ -1,4 +1,6 @@
 {
-  "redirects": [{ "source": "/favicon.png", "destination": "/icon-192.png", "permanent": true }],
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [{ "source": "/favicon.png", "destination": "/icon-192.png", "permanent": true }]
 }

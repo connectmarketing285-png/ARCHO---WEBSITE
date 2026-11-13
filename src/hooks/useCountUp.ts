@@ -1,8 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
-import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
+import { esPrimeraCarga } from '@/lib/hidratacion'
 
 const DURATION = 1800
+
+/** El mismo pliegue que `useReveal`: lo que está por encima ya se ve al cargar. */
+const FOLD = 0.88
 
 /** easeOutCubic: arranca rápido y frena al final, como el contador del original. */
 const easeOut = (progress: number) => 1 - (1 - progress) ** 3
@@ -10,25 +13,39 @@ const easeOut = (progress: number) => 1 - (1 - progress) ** 3
 /**
  * Cuenta de 0 al valor objetivo cuando el elemento entra en viewport.
  *
- * Mismo criterio que `useReveal`: con `prefers-reduced-motion` no se anima ni se
- * observa nada, la cifra final se pinta de inmediato.
+ * El estado inicial es la cifra FINAL, no 0: es lo que va en el HTML
+ * prerenderizado (un "0+ proyectos" en el HTML es lo que leerían buscadores y
+ * tarjetas de enlace) y lo que pinta el primer render del cliente, para que la
+ * hidratación coincida. En un efecto de layout, antes del pintado, se baja a 0
+ * solo si el contador está bajo el pliegue: ahí nadie lo ve todavía. Si ya
+ * está en pantalla al cargar, se queda con la cifra final sin animar.
+ *
+ * Mismo criterio que `useReveal`: con `prefers-reduced-motion` no se anima.
  */
 export function useCountUp<T extends HTMLElement = HTMLSpanElement>(
   target: number,
   duration = DURATION,
 ) {
   const ref = useRef<T>(null)
-  const [value, setValue] = useState(0)
-  const prefersReducedMotion = usePrefersReducedMotion()
+  const [value, setValue] = useState(target)
+  const animate = useRef(false)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const element = ref.current
     if (!element) return
 
-    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
-      setValue(target)
-      return
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReduced || !('IntersectionObserver' in window)) return
+
+    if (!esPrimeraCarga() || element.getBoundingClientRect().top >= window.innerHeight * FOLD) {
+      animate.current = true
+      setValue(0)
     }
+  }, [])
+
+  useEffect(() => {
+    const element = ref.current
+    if (!element || !animate.current) return
 
     let frame = 0
 
@@ -55,7 +72,7 @@ export function useCountUp<T extends HTMLElement = HTMLSpanElement>(
       observer.disconnect()
       cancelAnimationFrame(frame)
     }
-  }, [target, duration, prefersReducedMotion])
+  }, [target, duration])
 
   return [ref, value] as const
 }

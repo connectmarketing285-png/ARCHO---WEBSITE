@@ -118,24 +118,29 @@
     transform: translate(-50%, -50%);
   }
 
+  /* Visible por defecto: así sale en el HTML prerenderizado y así lo ve quien
+     no ejecuta JS. `useReveal` añade `is-pending` solo a lo que está bajo el
+     pliegue al cargar, y lo quita al llegar; la transición es la de entrada.
+     Al ocultar no hay transición (`none`): el elemento está fuera de pantalla
+     y tiene que estar listo antes de que el usuario llegue. */
   .reveal {
-    opacity: 0;
-    transform: translateY(24px);
     transition:
       opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
       transform 1s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .reveal.is-visible {
-    opacity: 1;
-    transform: none;
+  .reveal.is-pending {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: none;
   }
 
-  /* El brief pide desactivar los reveal con prefers-reduced-motion. Se hace en
-     CSS y no solo en JS para que el contenido sea visible incluso si el
-     IntersectionObserver nunca llega a marcar .is-visible. */
+  /* El brief pide desactivar los reveal con prefers-reduced-motion. El hook ya
+     no oculta nada en ese caso; esto es la red por si la preferencia cambia
+     con la página abierta. */
   @media (prefers-reduced-motion: reduce) {
-    .reveal {
+    .reveal,
+    .reveal.is-pending {
       opacity: 1;
       transform: none;
       transition: none;
