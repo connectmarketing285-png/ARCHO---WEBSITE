@@ -5,7 +5,7 @@ import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import { trackPageView, trackWhatsAppClicks } from '@/lib/analytics'
 import { marcarPrimeraCargaTerminada } from '@/lib/hidratacion'
-import { pageTitle } from '@/lib/page-title'
+import { pageTitle } from '@/data/seo'
 
 /** React Router no reinicia el scroll al navegar; sin esto la ruta nueva abre a media página. */
 function ScrollToTop() {

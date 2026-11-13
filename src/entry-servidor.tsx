@@ -1,9 +1,8 @@
+/* oxlint-disable react/only-export-components -- este archivo no lo carga nunca el servidor de desarrollo; ver abajo. */
 import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom'
 
 import Rutas from '@/Rutas'
-import { NAV_ITEMS } from '@/data/nav'
-import { pageTitle } from '@/lib/page-title'
 
 /**
  * Entrada del prerenderizado. La usa tools/prerenderizar.mjs en el build y
@@ -25,7 +24,16 @@ export function render(ruta: string): string {
   )
 }
 
-/** Las rutas a prerenderizar: las del menú, que hoy son todas las del sitio. */
-export const RUTAS: readonly string[] = NAV_ITEMS.map((item) => item.to)
-
-export { pageTitle }
+/* La tabla de metadatos viaja en el mismo bundle: un solo build SSR. La regla
+   de Fast Refresh no aplica: este archivo no lo carga nunca el servidor de
+   desarrollo. */
+export {
+  RUTAS,
+  SEO,
+  SEO_404,
+  comprobarRutas,
+  metadatosDe,
+  organizacionJsonLd,
+  robotsTxt,
+  sitemapXml,
+} from '@/data/seo'

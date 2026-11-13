@@ -19,9 +19,11 @@
  * `dist/404.html`, que Vercel sirve con estado 404 real; la reescritura
  * anterior respondía 200 a cualquier URL.
  *
- * Patrón portado de Noventis-website/tools/prerenderizar.mjs. Los metadatos
- * por ruta (description, og, canonical) y el sitemap generado son la fase
- * siguiente; aquí solo cambia el <title>, que ya cambiaba en el cliente.
+ * Cada página lleva su <title>, description, canónica, Open Graph y, en la
+ * portada, el JSON-LD; el sitemap.xml y el robots.txt salen de la misma tabla.
+ * Todo viene de src/data/seo.ts.
+ *
+ * Patrón portado de Noventis-website/tools/prerenderizar.mjs.
  */
 
 import { execSync } from 'node:child_process'
@@ -45,9 +47,21 @@ mkdirSync(TEMPORAL, { recursive: true })
 execSync(`npx vite build --ssr src/entry-servidor.tsx --outDir "${TEMPORAL}" --logLevel error`, {
   stdio: ['ignore', 'ignore', 'inherit'],
 })
-const { render, RUTAS, pageTitle } = await import(
-  pathToFileURL(join(TEMPORAL, 'entry-servidor.js')).href
-)
+const {
+  render,
+  RUTAS,
+  SEO,
+  SEO_404,
+  comprobarRutas,
+  metadatosDe,
+  organizacionJsonLd,
+  robotsTxt,
+  sitemapXml,
+} = await import(pathToFileURL(join(TEMPORAL, 'entry-servidor.js')).href)
+
+/* Antes de escribir nada: el menú y la tabla de metadatos tienen que listar
+   las mismas rutas. */
+comprobarRutas()
 
 /* 2 · Preparar la plantilla. */
 
@@ -65,19 +79,40 @@ const base = plantilla
   .replace(/<!--[\s\S]*?-->\n?\s*/g, '')
   .replace(/<title>[\s\S]*?<\/title>\s*/, '')
 
-if (/<title>/.test(base)) throw new Error('Quedó un <title> en la plantilla; se duplicaría.')
+/* Los metadatos por ruta salen de seo.ts y solo de ahí. Si alguien vuelve a
+   poner uno fijo en index.html, el build se detiene en vez de publicar dos
+   descriptions (o dos og:title) en el mismo documento. */
+for (const patron of [/<title>/, /name="description"/, /property="og:/, /name="twitter:/, /rel="canonical"/, /application\/ld\+json/]) {
+  if (patron.test(base)) {
+    throw new Error(`index.html trae una etiqueta que genera seo.ts (${patron}); se duplicaría.`)
+  }
+}
 if (!base.includes('<div id="root"></div>')) {
   throw new Error(`No se encontró <div id="root"></div> en ${PLANTILLA}.`)
 }
 
-function documento(ruta, { es404 = false } = {}) {
+/**
+ * El bloque de datos estructurados. `<` va escapado como `<`: un dato que
+ * contuviera `</script>` cerraría la etiqueta antes de tiempo, y
+ * `JSON.stringify` no lo escapa solo porque `<` es válido en una cadena JSON.
+ */
+function bloqueJsonLd(datos) {
+  const json = JSON.stringify(datos, null, 2).replace(/</g, '\\u003c')
+  return `<script type="application/ld+json">\n${json}\n    </script>`
+}
+
+function documento(ruta, meta, { es404 = false } = {}) {
   const cuerpo = render(ruta)
   if (!cuerpo.includes('<main')) throw new Error(`El HTML de ${ruta} salió sin <main>.`)
 
+  const datos = metadatosDe(ruta, meta, es404)
   const cabecera = [
-    `<title>${escapar(pageTitle(ruta))}</title>`,
-    /* La página de error no se indexa, pero sus enlaces sí se siguen. */
-    ...(es404 ? ['<meta name="robots" content="noindex, follow" />'] : []),
+    `<title>${escapar(datos.title)}</title>`,
+    ...(datos.canonical ? [`<link rel="canonical" href="${escapar(datos.canonical)}" />`] : []),
+    ...datos.nombradas.map(([k, v]) => `<meta name="${k}" content="${escapar(v)}" />`),
+    ...datos.propiedades.map(([k, v]) => `<meta property="${k}" content="${escapar(v)}" />`),
+    /* Solo la portada; el porqué está en seo.ts. */
+    ...(ruta === '/' ? [bloqueJsonLd(organizacionJsonLd())] : []),
   ]
     .map((linea) => `    ${linea}\n`)
     .join('')
@@ -98,16 +133,22 @@ const escribir = (archivo, html) => {
 }
 
 for (const ruta of RUTAS) {
-  escribir(ruta === '/' ? 'index.html' : `${ruta.slice(1)}.html`, documento(ruta))
+  escribir(ruta === '/' ? 'index.html' : `${ruta.slice(1)}.html`, documento(ruta, SEO[ruta]))
 }
 
 /* El 404 se pinta contra una ruta que no existe, para que el router caiga en
    el comodín. */
-escribir('404.html', documento('/__404__', { es404: true }))
+escribir('404.html', documento('/__404__', SEO_404, { es404: true }))
+
+/* 4 · Lo que leen los rastreadores y no los visitantes. Sale de la misma
+   tabla que el HTML, así que no puede listar una ruta que ya no existe. */
+const paginas = escritos.length
+escribir('sitemap.xml', sitemapXml())
+escribir('robots.txt', robotsTxt())
 
 rmSync(TEMPORAL, { recursive: true, force: true })
 
 for (const [archivo, bytes] of escritos) {
   console.log(`  ${DIST}/${archivo.padEnd(16)} ${String(bytes).padStart(7)} B`)
 }
-console.log(`\n${escritos.length} páginas prerenderizadas.`)
+console.log(`\n${paginas} páginas prerenderizadas, más sitemap.xml y robots.txt.`)

@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>ARCHO — Diseño y construcción, un solo proceso.</title>
-    <meta
-      name="description"
-      content="ARCHO es un estudio integral de arquitectura y construcción con presencia en San Luis Potosí, Querétaro, Guanajuato, Monterrey, Guadalajara y Baja California."
-    />
+    <!--
+      Este <title> es solo para `vite dev`. En el build, tools/prerenderizar.mjs
+      lo quita y escribe en cada página su <title>, description, canónica,
+      etiquetas Open Graph y (en la portada) el JSON-LD, todo desde
+      src/data/seo.ts. No añadir aquí metadatos por ruta: se duplicarían.
+    -->
     <meta name="author" content="ARCHO Estudio" />
     <meta name="theme-color" content="#0A0A0A" />
 
@@ -24,97 +26,8 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="ARCHO — Diseño y construcción, un solo proceso." />
-    <meta
-      property="og:description"
-      content="Arquitectura, obra civil, estructuras, cimentación y supervisión — un estudio, ocho disciplinas."
-    />
-    <!-- TODO(fase 7): generar og-image propia y servirla desde /public. La original apuntaba a un preview de Lovable en r2.dev. -->
-    <!-- <meta property="og:image" content="/og-image.jpg" /> -->
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="ARCHO — Arquitectura, estructura, visión" />
-    <meta
-      name="twitter:description"
-      content="ARCHO es un estudio contemporáneo de arquitectura y construcción que integra diseño y obra en un mismo proceso. San Luis Potosí · Querétaro · Guanajuato · Monterrey · Guadalajara · Baja California."
-    />
-
     <!-- El logo es el elemento LCP de la home (marca de agua del hero) y además
          aparece en la cabecera y el pie de todas las rutas. -->
-    <!--
-      Datos estructurados para búsqueda local. Van en el HTML estático y no
-      inyectados desde React: esto es una SPA, así que lo que monta React no
-      está en la respuesta inicial que leen los rastreadores.
-
-      `geo` lleva las coordenadas exactas de la oficina, facilitadas por el
-      cliente. Antes se omitía porque la dirección no resuelve en las bases de
-      geocodificación abiertas y un valor aproximado en datos estructurados es
-      peor que ninguno: Google lo toma como la ubicación declarada del negocio.
-
-      Las URLs van con www: es el dominio canónico y archo.com.mx redirige
-      ahí (308). Igual en sitemap.xml y robots.txt.
-    -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "GeneralContractor",
-        "@id": "https://www.archo.com.mx/#organizacion",
-        "name": "ARCHO Constructora",
-        "alternateName": "ARCHO Estudio",
-        "url": "https://www.archo.com.mx/",
-        "logo": "https://www.archo.com.mx/archo-lockup.png",
-        "image": "https://www.archo.com.mx/archo-lockup.png",
-        "description": "Estudio integral de arquitectura y construcción. Diseño arquitectónico y ejecución de obra como un solo proceso.",
-        "email": "admin@archo.com.mx",
-        "telephone": "+52 440 122 2002",
-        "foundingDate": "2011",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "Prol, Santos Degollado 1137, Tangamanga, Cuarto piso",
-          "addressLocality": "San Luis Potosí",
-          "addressRegion": "S.L.P.",
-          "postalCode": "78269",
-          "addressCountry": "MX"
-        },
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": 22.143511,
-          "longitude": -100.996727
-        },
-        "hasMap": "https://www.google.com/maps/search/?api=1&query=22.143511,-100.996727",
-        "openingHoursSpecification": [
-          {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-            "opens": "09:00",
-            "closes": "19:00"
-          }
-        ],
-        "areaServed": [
-          { "@type": "AdministrativeArea", "name": "San Luis Potosí" },
-          { "@type": "AdministrativeArea", "name": "Querétaro" },
-          { "@type": "AdministrativeArea", "name": "Guanajuato" },
-          { "@type": "AdministrativeArea", "name": "Monterrey" },
-          { "@type": "AdministrativeArea", "name": "Guadalajara" },
-          { "@type": "AdministrativeArea", "name": "Baja California" }
-        ],
-        "sameAs": [
-          "https://www.instagram.com/archo.constructora",
-          "https://www.linkedin.com/company/archo-constructora/"
-        ],
-        "knowsAbout": [
-          "Estructura metálica",
-          "Ingeniería estructural",
-          "Instalaciones",
-          "Estructura de concreto",
-          "Obra residencial",
-          "Carpintería",
-          "Supervisión de obra"
-        ]
-      }
-    </script>
-
     <link rel="preload" as="image" href="/archo-isotipo.png" fetchpriority="high" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
