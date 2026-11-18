@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 
+import Compartir from '@/components/blog/Compartir'
 import ImagenSanity from '@/components/blog/ImagenSanity'
 import PortableTexto from '@/components/blog/PortableTexto'
 import ContactSection from '@/components/home/ContactSection'
@@ -107,7 +108,9 @@ export default function BlogPost() {
                 </p>
               )}
 
-              <footer className="mt-20 flex flex-wrap items-center justify-between gap-6 border-t border-white/10 pt-8">
+              <Compartir post={post} />
+
+              <footer className="mt-12 flex flex-wrap items-center justify-between gap-6 border-t border-white/10 pt-8">
                 <p className="text-[11px] uppercase tracking-[0.3em] text-archo-mist">
                   {firma(post)} · <time dateTime={post.publishedAt}>{fecha}</time>
                 </p>

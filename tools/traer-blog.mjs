@@ -164,6 +164,9 @@ const cuerpo = (bloques) =>
   })
 
 const listado = posts.map((p) => ({
+  /* El id de Sanity no cambia nunca, ni aunque cambie el slug: es el guid
+     del feed RSS (seo.ts). */
+  id: p._id,
   slug: p.slug,
   titulo: p.titulo.trim(),
   extracto: p.extracto.trim(),

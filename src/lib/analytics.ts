@@ -1,3 +1,5 @@
+import { SITE } from '@/data/site'
+
 declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void
@@ -27,7 +29,8 @@ export function trackPageView() {
 }
 
 /**
- * Registra `whatsapp_click` en cada clic a un enlace de WhatsApp del sitio.
+ * Registra `whatsapp_click` en cada clic a un enlace de WhatsApp para
+ * contactar a ARCHO.
  *
  * Nombre propio y no `generate_lead`: Google Ads importa conversiones de GA4
  * por nombre de evento, y `generate_lead` queda para el formulario de contacto
@@ -51,7 +54,10 @@ export function trackPageView() {
 export function trackWhatsAppClicks() {
   const onClick = (event: MouseEvent) => {
     if (!(event.target instanceof Element)) return
-    const link = event.target.closest<HTMLAnchorElement>('a[href^="https://wa.me/"]')
+    /* Solo los enlaces al número de ARCHO. Los de compartir un artículo
+       (`wa.me/?text=…`, sin número) también van a wa.me, pero no son un
+       contacto: se miden con `share` (ver `trackShare`). */
+    const link = event.target.closest<HTMLAnchorElement>(`a[href^="${SITE.whatsapp.href}"]`)
     if (!link) return
 
     const location =
@@ -69,4 +75,30 @@ export function trackWhatsAppClicks() {
 
   document.addEventListener('click', onClick, { capture: true })
   return () => document.removeEventListener('click', onClick, { capture: true })
+}
+
+/** Por dónde se compartió un artículo: el valor de `method` en GA4. */
+export type RedCompartir = 'linkedin' | 'whatsapp' | 'copiar_enlace'
+
+/**
+ * Registra `share` al compartir un artículo del blog.
+ *
+ * `share` es un evento recomendado de GA4, con `method`, `content_type` e
+ * `item_id`: aparece en los informes estándar sin configurar nada. Es otro
+ * nombre que `whatsapp_click` a propósito: compartir un artículo por WhatsApp
+ * no es un contacto, y si contara como tal inflaría la conversión de Ads.
+ *
+ * Mismo patrón que `whatsapp_click`: `window.gtag?.`, sin gtag no hace nada, y
+ * `click_path` en lugar de `page_path` (que gtag descarta). LinkedIn y
+ * WhatsApp abren pestaña nueva, así que la página no se descarga y el envío
+ * no corre riesgo; aun así viaja con `fetch` + `keepalive`. "Copiar enlace"
+ * solo se registra si el portapapeles aceptó el texto.
+ */
+export function trackShare(method: RedCompartir, slug: string) {
+  window.gtag?.('event', 'share', {
+    method,
+    content_type: 'articulo',
+    item_id: slug,
+    click_path: window.location.pathname,
+  })
 }

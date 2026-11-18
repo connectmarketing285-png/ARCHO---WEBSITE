@@ -50,6 +50,7 @@ execSync(`npx vite build --ssr src/entry-servidor.tsx --outDir "${TEMPORAL}" --l
 const {
   render,
   RUTAS,
+  RUTA_RSS,
   SEO_404,
   ID_DATOS_ARTICULO,
   blogPostingJsonLd,
@@ -59,12 +60,16 @@ const {
   organizacionJsonLd,
   postDeRuta,
   robotsTxt,
+  rssXml,
   sitemapXml,
 } = await import(pathToFileURL(join(TEMPORAL, 'entry-servidor.js')).href)
 
 /* Antes de escribir nada: el menú y la tabla de metadatos tienen que listar
    las mismas rutas. */
 comprobarRutas()
+
+/* El nombre del feed en el <link rel="alternate">: el mismo título que /blog. */
+const SEO_BLOG_TITULO = metaDeRuta('/blog').title
 
 /* 2 · Preparar la plantilla. */
 
@@ -151,6 +156,11 @@ function documento(ruta, meta, { es404 = false, articulo = null } = {}) {
   const cabecera = [
     `<title>${escapar(datos.title)}</title>`,
     ...(datos.canonical ? [`<link rel="canonical" href="${escapar(datos.canonical)}" />`] : []),
+    /* El feed, en el listado y en cada artículo: así lo encuentran solos los
+       lectores RSS y las extensiones que buscan feeds. */
+    ...(ruta === '/blog' || post
+      ? [`<link rel="alternate" type="application/rss+xml" title="${escapar(SEO_BLOG_TITULO)}" href="${RUTA_RSS}" />`]
+      : []),
     ...datos.nombradas.map(([k, v]) => `<meta name="${k}" content="${escapar(v)}" />`),
     ...datos.propiedades.map(([k, v]) => `<meta property="${k}" content="${escapar(v)}" />`),
     /* La entidad de la empresa, solo en la portada; el porqué está en seo.ts. */
@@ -199,6 +209,7 @@ escribir('404.html', documento('/__404__', SEO_404, { es404: true }))
 const paginas = escritos.length
 escribir('sitemap.xml', sitemapXml())
 escribir('robots.txt', robotsTxt())
+escribir(RUTA_RSS.slice(1), rssXml())
 
 rmSync(TEMPORAL, { recursive: true, force: true })
 
@@ -206,4 +217,4 @@ const ancho = Math.max(...escritos.map(([a]) => a.length)) + 2
 for (const [archivo, bytes] of escritos) {
   console.log(`  ${DIST}/${archivo.padEnd(ancho)} ${String(bytes).padStart(7)} B`)
 }
-console.log(`\n${paginas} páginas prerenderizadas, más sitemap.xml y robots.txt.`)
+console.log(`\n${paginas} páginas prerenderizadas, más sitemap.xml, robots.txt y ${RUTA_RSS.slice(1)}.`)

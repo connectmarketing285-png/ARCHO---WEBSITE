@@ -24,6 +24,21 @@ Se envía al pulsar cualquier enlace a `wa.me` del sitio (`trackWhatsAppClicks` 
 - **Para verlo en informes y exploraciones** (en tiempo real no hace falta): registrar `button_location` y `click_path` como dimensiones personalizadas de evento en Administrar → Definiciones personalizadas.
 - **No confundir con `click`:** si la medición mejorada tiene activados los clics salientes, GA4 registra además un `click` con `outbound=true` para el mismo enlace. Es otro evento; el que se mide es `whatsapp_click`.
 
+### Evento `share`
+
+Se envía al compartir un artículo del blog desde los botones del final (`trackShare` en `src/lib/analytics.ts`). Es un evento recomendado de GA4, así que sale en los informes estándar.
+
+| Parámetro | Valores | Para qué |
+|---|---|---|
+| `method` | `linkedin`, `whatsapp`, `copiar_enlace` | Por dónde se compartió |
+| `content_type` | `articulo` | Qué se compartió |
+| `item_id` | el slug, p. ej. `que-revisar-antes-de-aprobar-un-presupuesto-de-obra` | Qué artículo |
+| `click_path` | `/blog/<slug>` | Desde qué página (igual que en `whatsapp_click`) |
+
+- **No es `whatsapp_click`:** compartir un artículo por WhatsApp no es contactar a ARCHO. `whatsapp_click` solo escucha los enlaces al número de ARCHO (`SITE.whatsapp.href`); los de compartir (`wa.me/?text=…`) no llevan número y no lo disparan.
+- **`copiar_enlace` solo cuenta si el portapapeles aceptó el texto**, no al pulsar.
+- Para ver `click_path` en exploraciones, la misma dimensión personalizada que ya usa `whatsapp_click`.
+
 ### Datos que no hay que volver a suponer
 
 - **El formulario de contacto es Web3Forms, no Tally.** Lo envía nuestro propio código (`src/lib/contact-form.ts`) con `fetch` a la API de Web3Forms.

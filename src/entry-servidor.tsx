@@ -36,6 +36,7 @@ export function render(ruta: string, articulo: Articulo | null = null): string {
    desarrollo. */
 export {
   RUTAS,
+  RUTA_RSS,
   SEO_404,
   blogPostingJsonLd,
   comprobarRutas,
@@ -44,6 +45,7 @@ export {
   organizacionJsonLd,
   postDeRuta,
   robotsTxt,
+  rssXml,
   sitemapXml,
 } from '@/data/seo'
 export { ID_DATOS_ARTICULO } from '@/lib/articulo'

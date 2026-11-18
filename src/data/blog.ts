@@ -22,6 +22,8 @@ export type ImagenSanity = {
 }
 
 export type PostResumen = {
+  /** El `_id` de Sanity: permanente aunque cambie el slug. */
+  id: string
   slug: string
   titulo: string
   extracto: string

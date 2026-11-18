@@ -372,3 +372,60 @@ export function sitemapXml() {
     '',
   ].join('\n')
 }
+
+/** Dónde se publica el feed. Lo enlaza el <head> de /blog y de cada artículo. */
+export const RUTA_RSS = '/blog/rss.xml'
+
+const escaparXml = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
+/** RFC-822, como pide RSS 2.0: "Fri, 13 Nov 2026 17:46:59 GMT". */
+const fechaRss = (iso: string) => new Date(iso).toUTCString()
+
+/**
+ * EL FEED RSS DEL BLOG (RSS 2.0). Sale del mismo listado que /blog y el
+ * sitemap: un artículo no puede estar en uno y faltar en otro.
+ *
+ * - `description` es el EXTRACTO, no el cuerpo: el feed avisa que hay algo
+ *   nuevo, y el artículo se lee en el sitio.
+ * - `guid` es el `_id` de Sanity (`isPermaLink="false"`), no la URL: si
+ *   alguien corrige el slug, los lectores no lo muestran como artículo nuevo.
+ * - `lastBuildDate` es el último cambio publicado, no la hora del build: el
+ *   feed no aparenta cambiar en cada despliegue (mismo criterio que el
+ *   `lastmod` del sitemap). Sin artículos, la hora del build.
+ * - `atom:link rel="self"` lo pide el validador del W3C: dice dónde vive el
+ *   feed aunque alguien lo copie o lo sirva desde otro lado.
+ */
+export function rssXml(ahora = new Date()) {
+  const blog = SEO['/blog']
+  const ultimoCambio = POSTS.map((p) => p.updatedAt).sort().at(-1)
+
+  const items = POSTS.map((p) => {
+    const url = `${SITE_URL}${rutaPost(p.slug)}`
+    return [
+      '    <item>',
+      `      <title>${escaparXml(p.titulo)}</title>`,
+      `      <link>${url}</link>`,
+      `      <description>${escaparXml(p.extracto)}</description>`,
+      `      <pubDate>${fechaRss(p.publishedAt)}</pubDate>`,
+      `      <guid isPermaLink="false">archo-blog-${escaparXml(p.id)}</guid>`,
+      '    </item>',
+    ].join('\n')
+  })
+
+  return [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
+    '  <channel>',
+    `    <title>${escaparXml(blog.title)}</title>`,
+    `    <link>${SITE_URL}/blog</link>`,
+    `    <description>${escaparXml(blog.description)}</description>`,
+    '    <language>es-MX</language>',
+    `    <lastBuildDate>${ultimoCambio ? fechaRss(ultimoCambio) : ahora.toUTCString()}</lastBuildDate>`,
+    `    <atom:link href="${SITE_URL}${RUTA_RSS}" rel="self" type="application/rss+xml" />`,
+    ...items,
+    '  </channel>',
+    '</rss>',
+    '',
+  ].join('\n')
+}
